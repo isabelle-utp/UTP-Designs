@@ -1,4 +1,4 @@
-theory utp_designs
+theory utp_des_core
   imports UTP2.utp_wlp
 begin 
 
