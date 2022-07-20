@@ -77,4 +77,16 @@ theorem ndesign_composition_wlp:
   "(p\<^sub>1 \<turnstile>\<^sub>n Q\<^sub>1) \<Zcomp> (p\<^sub>2 \<turnstile>\<^sub>n Q\<^sub>2) = (p\<^sub>1 \<and> Q\<^sub>1 wlp p\<^sub>2) \<turnstile>\<^sub>n (Q\<^sub>1 \<Zcomp> Q\<^sub>2)"
   by (simp add: rdesign_composition unrest, rel_auto)
 
+definition skip_d :: "('\<alpha>,'\<alpha>) des_rel" ("II\<^sub>D") where 
+  "II\<^sub>D \<equiv> (true \<turnstile>\<^sub>r II)"
+
+definition bot_d :: "('\<alpha>, '\<beta>) des_rel" ("\<bottom>\<^sub>D") where
+  "\<bottom>\<^sub>D = (false \<turnstile> false)"
+
+definition pre_design :: "('\<alpha>, '\<beta>) des_rel \<Rightarrow> ('\<alpha> \<leftrightarrow> '\<beta>)" ("pre\<^sub>D") where
+  "pre\<^sub>D(P) =  (\<not>P\<lbrakk>true,false/ok\<^sup><,ok\<^sup>>\<rbrakk>) \<down> more\<^sub>L\<^sup>2"
+
+definition post_design :: "('\<alpha>, '\<beta>) des_rel \<Rightarrow> ('\<alpha> \<leftrightarrow> '\<beta>)" ("post\<^sub>D") where
+  "post\<^sub>D(P) = P\<lbrakk>true,true/ok\<^sup><,ok\<^sup>>\<rbrakk> \<down> more\<^sub>L\<^sup>2"
+
 end
