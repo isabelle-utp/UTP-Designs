@@ -83,6 +83,13 @@ definition skip_d :: "('\<alpha>,'\<alpha>) des_rel" ("II\<^sub>D") where
 definition bot_d :: "('\<alpha>, '\<beta>) des_rel" ("\<bottom>\<^sub>D") where
   "\<bottom>\<^sub>D = (false \<turnstile> false)"
 
+definition top_d :: "('\<alpha>, '\<beta>) des_rel" ("\<top>\<^sub>D") where
+  "\<top>\<^sub>D = (true \<turnstile> false)"
+
+lemma top_d_not_ok:
+  "\<top>\<^sub>D = (\<not> ok\<^sup><)\<^sub>u"
+  unfolding top_d_def design_def by (expr_simp, simp add: Collect_neg_eq not_pred_def)
+
 definition pre_design :: "('\<alpha>, '\<beta>) des_rel \<Rightarrow> ('\<alpha> \<leftrightarrow> '\<beta>)" ("pre\<^sub>D") where
   "pre\<^sub>D(P) =  (\<not>P\<lbrakk>true,false/ok\<^sup><,ok\<^sup>>\<rbrakk>) \<down> more\<^sub>L\<^sup>2"
 
