@@ -78,23 +78,23 @@ theorem ndesign_composition_wlp:
   by (simp add: rdesign_composition unrest, rel_auto)
 
 definition skip_d :: "('\<alpha>,'\<alpha>) des_rel" ("II\<^sub>D") where 
-  "II\<^sub>D \<equiv> (true \<turnstile>\<^sub>r II)"
+  [rel]: "II\<^sub>D \<equiv> (true \<turnstile>\<^sub>r II)"
 
 definition bot_d :: "('\<alpha>, '\<beta>) des_rel" ("\<bottom>\<^sub>D") where
-  "\<bottom>\<^sub>D = (false \<turnstile> false)"
+  [rel]: "\<bottom>\<^sub>D = (false \<turnstile> false)"
 
 definition top_d :: "('\<alpha>, '\<beta>) des_rel" ("\<top>\<^sub>D") where
-  "\<top>\<^sub>D = (true \<turnstile> false)"
+  [rel]: "\<top>\<^sub>D = (true \<turnstile> false)"
 
 lemma top_d_not_ok:
   "\<top>\<^sub>D = (\<not> ok\<^sup><)\<^sub>u"
   unfolding top_d_def design_def by (expr_simp, simp add: Collect_neg_eq not_pred_def)
 
 definition pre_design :: "('\<alpha>, '\<beta>) des_rel \<Rightarrow> ('\<alpha> \<leftrightarrow> '\<beta>)" ("pre\<^sub>D") where
-  "pre\<^sub>D(P) =  (\<not>P\<lbrakk>true,false/ok\<^sup><,ok\<^sup>>\<rbrakk>) \<down> more\<^sub>L\<^sup>2"
+  [rel]: "pre\<^sub>D(P) =  (\<not>P\<lbrakk>true,false/ok\<^sup><,ok\<^sup>>\<rbrakk>) \<down> more\<^sub>L\<^sup>2"
 
 definition post_design :: "('\<alpha>, '\<beta>) des_rel \<Rightarrow> ('\<alpha> \<leftrightarrow> '\<beta>)" ("post\<^sub>D") where
-  "post\<^sub>D(P) = P\<lbrakk>true,true/ok\<^sup><,ok\<^sup>>\<rbrakk> \<down> more\<^sub>L\<^sup>2"
+  [rel]: "post\<^sub>D(P) = P\<lbrakk>true,true/ok\<^sup><,ok\<^sup>>\<rbrakk> \<down> more\<^sub>L\<^sup>2"
 
 syntax
   "_ok_f"  :: "logic \<Rightarrow> logic" ("_\<^sup>f" [1000] 1000)
