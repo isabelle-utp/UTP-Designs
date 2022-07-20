@@ -23,6 +23,12 @@ translations
   "P \<turnstile>\<^sub>r Q" == "CONST rdesign P Q"
   "p \<turnstile>\<^sub>n Q" == "(p\<^sup><)\<^sub>u \<turnstile>\<^sub>r Q"
 
+syntax
+  "_svid_des_alpha"  :: "svid" ("\<^bold>v\<^sub>D")
+
+translations
+  "_svid_des_alpha" => "CONST des_vars.more\<^sub>L"
+
 lemma "false \<turnstile> true = true"
   by rel_auto
 
