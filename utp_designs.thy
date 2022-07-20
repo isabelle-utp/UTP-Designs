@@ -96,4 +96,12 @@ definition pre_design :: "('\<alpha>, '\<beta>) des_rel \<Rightarrow> ('\<alpha>
 definition post_design :: "('\<alpha>, '\<beta>) des_rel \<Rightarrow> ('\<alpha> \<leftrightarrow> '\<beta>)" ("post\<^sub>D") where
   "post\<^sub>D(P) = P\<lbrakk>true,true/ok\<^sup><,ok\<^sup>>\<rbrakk> \<down> more\<^sub>L\<^sup>2"
 
+syntax
+  "_ok_f"  :: "logic \<Rightarrow> logic" ("_\<^sup>f" [1000] 1000)
+  "_ok_t"  :: "logic \<Rightarrow> logic" ("_\<^sup>t" [1000] 1000)
+
+translations
+  "P\<^sup>f" \<rightharpoonup> "_subst P false (_svid_post (CONST ok))"
+  "P\<^sup>t" \<rightharpoonup> "_subst P true (_svid_post (CONST ok))"
+
 end
