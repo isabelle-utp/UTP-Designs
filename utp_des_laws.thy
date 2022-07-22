@@ -83,21 +83,20 @@ theorem rdesign_composition_cond:
   shows "((p1 \<turnstile>\<^sub>r Q1) ;; (P2 \<turnstile>\<^sub>r Q2)) = ((p1 \<and> \<not> (Q1 ;; (\<not> P2))) \<turnstile>\<^sub>r (Q1 ;; Q2))"
   using assms by pred_auto
 
-(*
+
 theorem design_composition_wp:
   fixes p1 p2 :: "'a des_vars_scheme \<Rightarrow> bool"
   assumes
     "$ok \<sharp> p1" "$ok \<sharp> p2"
     "$ok\<^sup>< \<sharp> Q1" "$ok\<^sup>> \<sharp> Q1" "$ok\<^sup>< \<sharp> Q2" "$ok\<^sup>> \<sharp> Q2"
-  shows "(((p1\<^sup><)\<^sub>u \<turnstile> Q1) ;; ((p2\<^sup><)\<^sub>u \<turnstile> Q2)) = (((p1 \<and> Q1 wlp p2)\<^sup><)\<^sub>u \<turnstile> (Q1 ;; Q2))"
-  using assms unfolding design_def
-*)
+  shows "((p1\<^sup>< \<turnstile> Q1) ;; (p2\<^sup>< \<turnstile> Q2)) = ((p1 \<and> Q1 wlp p2)\<^sup>< \<turnstile> (Q1 ;; Q2))"
+  unfolding design_def by (pred_auto assms: assms, metis+)
 
-(*
+
 theorem rdesign_composition_wp:
-  "((\<lceil>p1\<rceil>\<^sub>< \<turnstile>\<^sub>r Q1) ;; (\<lceil>p2\<rceil>\<^sub>< \<turnstile>\<^sub>r Q2)) = ((\<lceil>p1 \<and> Q1 wlp p2\<rceil>\<^sub><) \<turnstile>\<^sub>r (Q1 ;; Q2))"
-  by (rel_blast)
-*)
+  "((p1\<^sup>< \<turnstile>\<^sub>r Q1) ;; (p2\<^sup>< \<turnstile>\<^sub>r Q2)) = ((p1 \<and> Q1 wlp p2)\<^sup>< \<turnstile>\<^sub>r (Q1 ;; Q2))"
+  by (pred_auto)
+
   
 theorem design_true_left_zero: "(true ;; (P \<turnstile> Q)) = true"
   by pred_auto
@@ -290,18 +289,15 @@ lemma ndesign_refinement:
   "p1 \<turnstile>\<^sub>n Q1 \<sqsubseteq> p2 \<turnstile>\<^sub>n Q2 \<longleftrightarrow> (`p1 \<longrightarrow> p2` \<and> `p1\<^sup>< \<and> Q2 \<longrightarrow> Q1`)"
   by pred_auto
 
-(*
-lemma ndesign_refinement': 
-  "p1 \<turnstile>\<^sub>n Q1 \<sqsubseteq> p2 \<turnstile>\<^sub>n Q2 \<longleftrightarrow> (`p1 \<Rightarrow> p2` \<and> Q1 \<sqsubseteq> ?[p1] ;; Q2)"
-  by (simp add: ndesign_refinement, pred_auto)
-*)
 
-(*
+lemma ndesign_refinement': 
+  "p1 \<turnstile>\<^sub>n Q1 \<sqsubseteq> p2 \<turnstile>\<^sub>n Q2 \<longleftrightarrow> (`p1 \<longrightarrow> p2` \<and> Q1 \<sqsubseteq> \<questiondown>p1? ;; Q2)"
+  by (simp add: ndesign_refinement, pred_auto)
+
 lemma ndesign_refine_intro:
-  assumes "(p1 \<Rightarrow> p2) = UNIV" "Q1 \<sqsubseteq> ?[p1] ;; Q2"
+  assumes "`p1 \<longrightarrow> p2`" "Q1 \<sqsubseteq> \<questiondown>p1? ;; Q2"
   shows "p1 \<turnstile>\<^sub>n Q1 \<sqsubseteq> p2 \<turnstile>\<^sub>n Q2"
   by (simp add: ndesign_refinement' assms)
-*)
 
 lemma design_top:
   "(P \<turnstile> Q) \<sqsubseteq> \<top>\<^sub>D"
