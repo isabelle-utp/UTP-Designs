@@ -1,5 +1,5 @@
 theory utp_des_core
-  imports UTP2.utp_rel_laws
+  imports UTP2.utp_wlp
 begin 
 
 alphabet des_vars = 
@@ -76,10 +76,9 @@ theorem rdesign_composition:
   "((P1 \<turnstile>\<^sub>r Q1) ;; (P2 \<turnstile>\<^sub>r Q2)) = (((\<not> ((\<not> P1) ;; true)) \<and> \<not> (Q1 ;; (\<not> P2))) \<turnstile>\<^sub>r (Q1 ;; Q2))"
   by (simp add: rdesign_def design_composition unrest usubst, pred_auto)
 
-(*theorem ndesign_composition_wlp:
+theorem ndesign_composition_wlp:
   "(p\<^sub>1 \<turnstile>\<^sub>n Q\<^sub>1) ;; (p\<^sub>2 \<turnstile>\<^sub>n Q\<^sub>2) = (p\<^sub>1 \<and> Q\<^sub>1 wlp p\<^sub>2) \<turnstile>\<^sub>n (Q\<^sub>1 ;; Q\<^sub>2)"
   by (simp add: rdesign_composition unrest, pred_auto)
-*)
 
 definition skip_d :: "('\<alpha>,'\<alpha>) des_rel" ("II\<^sub>D") where 
   [pred]: "II\<^sub>D \<equiv> (true \<turnstile>\<^sub>r II)"
