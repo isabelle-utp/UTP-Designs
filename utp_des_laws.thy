@@ -30,7 +30,7 @@ lemma true_is_rdesign: "(false \<turnstile>\<^sub>r true) = true"
 lemma bot_d_true: "\<bottom>\<^sub>D = true"
   by (pred_auto)  
   
-lemma bot_d_ndes_def [ndes_simp]: "\<bottom>\<^sub>D = (false \<turnstile>\<^sub>n true)"
+lemma bot_d_ndes_def [ndes_simp]: "\<bottom>\<^sub>D = (False \<turnstile>\<^sub>n true)"
   by (pred_auto)
 
 lemma design_false_pre: "(false \<turnstile> P) = true"
