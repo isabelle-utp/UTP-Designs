@@ -84,11 +84,17 @@ theorem rdesign_composition:
 definition skip_d :: "('\<alpha>,'\<alpha>) des_rel" ("II\<^sub>D") where 
   [pred]: "II\<^sub>D \<equiv> (true \<turnstile>\<^sub>r II)"
 
+expr_ctr skip_d
+
 definition bot_d :: "('\<alpha>, '\<beta>) des_rel" ("\<bottom>\<^sub>D") where
   [pred]: "\<bottom>\<^sub>D = (false \<turnstile> false)"
 
+expr_ctr bot_d
+
 definition top_d :: "('\<alpha>, '\<beta>) des_rel" ("\<top>\<^sub>D") where
   [pred]: "\<top>\<^sub>D = (true \<turnstile> false)"
+
+expr_ctr top_d
 
 lemma top_d_not_ok:
   "\<top>\<^sub>D = (\<not> ok\<^sup><)\<^sub>e"
@@ -98,8 +104,12 @@ lemma top_d_not_ok:
 definition pre_design :: "('\<alpha>, '\<beta>) des_rel \<Rightarrow> ('\<alpha>, '\<beta>) urel" ("pre\<^sub>D") where
   [pred]: "pre\<^sub>D(P) =  (\<not>P\<lbrakk>True,False/ok\<^sup><,ok\<^sup>>\<rbrakk>) \<down> more\<^sub>L\<^sup>2"
 
+expr_ctr pre_design
+
 definition post_design :: "('\<alpha>, '\<beta>) des_rel \<Rightarrow> ('\<alpha>, '\<beta>) urel" ("post\<^sub>D") where
   [pred]: "post\<^sub>D(P) = P\<lbrakk>True,True/ok\<^sup><,ok\<^sup>>\<rbrakk> \<down> more\<^sub>L\<^sup>2"
+
+expr_ctr post_design
 
 syntax
   "_ok_f"  :: "logic \<Rightarrow> logic" ("_\<^sup>f" [1000] 1000)
