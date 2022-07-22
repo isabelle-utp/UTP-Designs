@@ -72,22 +72,16 @@ theorem design_skip_idem [simp]:
   "(II\<^sub>D ;; II\<^sub>D) = II\<^sub>D"
   by (pred_auto)
 
-(*
 theorem design_composition_cond:
   assumes
     "out\<alpha> \<sharp> p1" "$ok\<^sup>< \<sharp> P2" "$ok\<^sup>> \<sharp> Q1" "$ok\<^sup>< \<sharp> Q2"
   shows "((p1 \<turnstile> Q1) ;; (P2 \<turnstile> Q2)) = ((p1 \<and> \<not> (Q1 ;; (\<not> P2))) \<turnstile> (Q1 ;; Q2))"
-  using assms
-  apply (simp add: design_composition unrest precond_right_unit)
-*)
+  using assms by (pred_simp, smt)
 
-(*
 theorem rdesign_composition_cond:
   assumes "out\<alpha> \<sharp> p1"
   shows "((p1 \<turnstile>\<^sub>r Q1) ;; (P2 \<turnstile>\<^sub>r Q2)) = ((p1 \<and> \<not> (Q1 ;; (\<not> P2))) \<turnstile>\<^sub>r (Q1 ;; Q2))"
-  using assms
-  by (simp add: rdesign_def design_composition_cond unrest alpha)
-*)
+  using assms by pred_auto
 
 (*
 theorem design_composition_wp:
@@ -258,30 +252,18 @@ lemma ndesign_eq_intro:
   shows "p\<^sub>1 \<turnstile>\<^sub>n P\<^sub>2 = q\<^sub>1 \<turnstile>\<^sub>n Q\<^sub>2"
   by (simp add: assms)
 
-(*
+
 theorem design_refinement:
   assumes
     "$ok\<^sup>< \<sharp> P1" "$ok\<^sup>> \<sharp> P1" "$ok\<^sup>< \<sharp> P2" "$ok\<^sup>> \<sharp> P2"
     "$ok\<^sup>< \<sharp> Q1" "$ok\<^sup>> \<sharp> Q1" "$ok\<^sup>< \<sharp> Q2" "$ok\<^sup>> \<sharp> Q2"
-  shows "((P1 \<turnstile> Q1) \<sqsubseteq> (P2 \<turnstile> Q2)) \<longleftrightarrow> (((P1 \<Rightarrow> P2) \<and> (P1 \<and> Q2 \<Rightarrow> Q1)) = UNIV)"
-proof -
-  have "(P1 \<turnstile> Q1) \<sqsubseteq> (P2 \<turnstile> Q2) \<longleftrightarrow> ((((ok\<^sup><)\<^sub>u \<and> P2 \<Rightarrow> (ok\<^sup>>)\<^sub>u \<and> Q2) \<Rightarrow> ((ok\<^sup><)\<^sub>u \<and> P1 \<Rightarrow> (ok\<^sup>>)\<^sub>u \<and> Q1)) = UNIV) "
-    apply (pred_auto)
-  also with assms have "... = `(P2 \<Rightarrow> ok\<^sup>> \<and> Q2) \<Rightarrow> (P1 \<Rightarrow> ok\<^sup>> \<and> Q1)`"
-    by (subst subst_bool_split[of "in_var ok"], simp_all, subst_tac)
-  also with assms have "... = `(\<not> P2 \<Rightarrow> \<not> P1) \<and> ((P2 \<Rightarrow> Q2) \<Rightarrow> P1 \<Rightarrow> Q1)`"
-    by (subst subst_bool_split[of "out_var ok"], simp_all, subst_tac)
-  also have "... \<longleftrightarrow> `(P1 \<Rightarrow> P2)` \<and> `P1 \<and> Q2 \<Rightarrow> Q1`"
-    by (pred_auto)
-  finally show ?thesis .
-qed
-*)
+  shows "((P1 \<turnstile> Q1) \<sqsubseteq> (P2 \<turnstile> Q2)) \<longleftrightarrow> `(P1 \<longrightarrow> P2) \<and> (P1 \<and> Q2 \<longrightarrow> Q1)`"
+  by (pred_auto assms: assms, smt+)
 
-(*
+
 theorem rdesign_refinement:
-  "(P1 \<turnstile>\<^sub>r Q1 \<sqsubseteq> P2 \<turnstile>\<^sub>r Q2) \<longleftrightarrow> ((P1 \<Rightarrow> P2) = UNIV) \<and> ((P1 \<and> Q2 \<Rightarrow> Q1) = UNIV)"
-  apply (pred_auto)
-*)
+  "(P1 \<turnstile>\<^sub>r Q1 \<sqsubseteq> P2 \<turnstile>\<^sub>r Q2) \<longleftrightarrow> `P1 \<longrightarrow> P2` \<and> `P1 \<and> Q2 \<longrightarrow> Q1`"
+  by (pred_auto)
 
 lemma design_refine_intro:
   assumes "`P1 \<longrightarrow> P2`" "`P1 \<and> Q2 \<longrightarrow> Q1`"
@@ -303,11 +285,10 @@ lemma rdesign_refine_intro':
   shows "P1 \<turnstile>\<^sub>r Q1 \<sqsubseteq> P2 \<turnstile>\<^sub>r Q2"
   using assms by (pred_auto)
 
-(*
+
 lemma ndesign_refinement: 
-  "p1 \<turnstile>\<^sub>n Q1 \<sqsubseteq> p2 \<turnstile>\<^sub>n Q2 \<longleftrightarrow> (((p1 \<Rightarrow> p2) = UNIV) \<and> (((p1\<^sup><)\<^sub>u \<and> Q2 \<Rightarrow> Q1) = UNIV))"
-  by (simp add: ndesign_def rdesign_def design_refinement unrest, pred_auto)
-*)
+  "p1 \<turnstile>\<^sub>n Q1 \<sqsubseteq> p2 \<turnstile>\<^sub>n Q2 \<longleftrightarrow> (`p1 \<longrightarrow> p2` \<and> `p1\<^sup>< \<and> Q2 \<longrightarrow> Q1`)"
+  by pred_auto
 
 (*
 lemma ndesign_refinement': 
