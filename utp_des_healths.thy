@@ -623,7 +623,6 @@ proof -
     by (metis H3_def Healthy_def')
   also have "... \<longleftrightarrow> P = (\<not> ((\<not> P) ;; true))"
     by (metis rdesign_pre)
-      thm seqr_true_lemma
   also have "... \<longleftrightarrow> P = (P ;; true)"
     by (simp add: seqr_true_lemma)
   finally show ?thesis .
@@ -633,9 +632,10 @@ theorem design_H3_iff_pre:
   assumes "$ok\<^sup>< \<sharp> P" "$ok\<^sup>> \<sharp> P" "$ok\<^sup>< \<sharp> Q" "$ok\<^sup>> \<sharp> Q"
   shows "P \<turnstile> Q is H3 \<longleftrightarrow> P = (P ;; true)"
 proof -
-  have "P \<turnstile> Q = \<lfloor>P\<rfloor>\<^sub>D \<turnstile>\<^sub>r \<lfloor>Q\<rfloor>\<^sub>D"
-    by (simp add: assms lift_desr_inv rdesign_def)
-  moreover hence "\<lfloor>P\<rfloor>\<^sub>D \<turnstile>\<^sub>r \<lfloor>Q\<rfloor>\<^sub>D is H3 \<longleftrightarrow> \<lfloor>P\<rfloor>\<^sub>D = (\<lfloor>P\<rfloor>\<^sub>D ;; true)"
+  have "P \<turnstile> Q = (P \<down> more\<^sub>L\<^sup>2) \<turnstile>\<^sub>r (Q \<down> more\<^sub>L\<^sup>2)"
+    apply (simp add: assms rdesign_def)
+    oops
+  moreover hence "(P \<down> more\<^sub>L\<^sup>2) \<turnstile>\<^sub>r (Q \<down> more\<^sub>L\<^sup>2) is H3 \<longleftrightarrow> (P \<down> more\<^sub>L\<^sup>2) = ((P \<down> more\<^sub>L\<^sup>2) ;; true)"
     using rdesign_H3_iff_pre by blast
   ultimately show ?thesis
     by (metis assms(1,2) drop_desr_inv lift_desr_inv lift_dist_seq aext_true)
@@ -652,15 +652,15 @@ lemma skip_d_absorb_J_1:
 lemma skip_d_absorb_J_2:
   "(J ;; II\<^sub>D) = II\<^sub>D"
 proof -
-  have "(J ;; II\<^sub>D) = (($ok \<Rightarrow> $ok\<acute>) \<and> \<lceil>II\<rceil>\<^sub>D) ;; (true \<turnstile> II)"
+  have "(J ;; II\<^sub>D) = ((ok\<^sup>< \<longrightarrow> ok\<^sup>>) \<and> II \<up> more\<^sub>L\<^sup>2)\<^sub>e ;; (true \<turnstile> II)"
     by (simp add: J_def skip_d_alt_def)
-  also have "... = (((($ok \<Rightarrow> $ok\<acute>) \<and> \<lceil>II\<rceil>\<^sub>D)\<lbrakk>false/$ok\<acute>\<rbrakk> ;; (true \<turnstile> II)\<lbrakk>false/$ok\<rbrakk>)
-                  \<or> ((($ok \<Rightarrow> $ok\<acute>) \<and> \<lceil>II\<rceil>\<^sub>D)\<lbrakk>true/$ok\<acute>\<rbrakk> ;; (true \<turnstile> II)\<lbrakk>true/$ok\<rbrakk>))"
-    by (rel_auto)
-  also have "... = ((\<not> $ok \<and> \<lceil>II\<rceil>\<^sub>D ;; true) \<or> (\<lceil>II\<rceil>\<^sub>D ;; $ok\<acute> \<and> \<lceil>II\<rceil>\<^sub>D))"
-    by (rel_auto)
+  also have "... = ((((ok\<^sup>< \<longrightarrow> ok\<^sup>>)\<^sub>e \<and> II \<up> more\<^sub>L\<^sup>2)\<lbrakk>False/ok\<^sup>>\<rbrakk> ;; (true \<turnstile> II)\<lbrakk>False/ok\<^sup><\<rbrakk>)
+                  \<or> (((ok\<^sup>< \<longrightarrow> ok\<^sup>>)\<^sub>e \<and> II \<up> more\<^sub>L\<^sup>2)\<lbrakk>True/ok\<^sup>>\<rbrakk> ;; (true \<turnstile> II)\<lbrakk>True/ok\<^sup><\<rbrakk>))"
+    by (pred_auto)
+  also have "... = ((\<not>ok\<^sup>< \<and> II \<up> more\<^sub>L\<^sup>2 ;; true) \<or> (II \<up> more\<^sub>L\<^sup>2 ;; ok\<^sup>> \<and> II \<up> more\<^sub>L\<^sup>2))"
+    by (pred_auto)
   also have "... = II\<^sub>D"
-    by (rel_auto)
+    by (pred_auto)
   finally show ?thesis .
 qed
 
@@ -677,7 +677,7 @@ theorem H2_H3_commute:
   by (simp add: H2_H3_absorb H3_H2_absorb)
 
 theorem H3_design_pre:
-  assumes "$ok \<sharp> p" "out\<alpha> \<sharp> p" "$ok \<sharp> Q" "$ok\<acute> \<sharp> Q"
+  assumes "$ok\<^sup>< \<sharp> p" "out\<alpha> \<sharp> p" "$ok\<^sup>< \<sharp> Q" "$ok\<^sup>> \<sharp> Q"
   shows "H3(p \<turnstile> Q) = p \<turnstile> Q"
   using assms
   by (metis Healthy_def' design_H3_iff_pre precond_right_unit unrest_out\<alpha>_var ok_vwb_lens vwb_lens_mwb)
@@ -689,19 +689,21 @@ theorem H3_rdesign_pre:
   by (simp add: H3_def)
 
 theorem H3_ndesign: "H3(p \<turnstile>\<^sub>n Q) = (p \<turnstile>\<^sub>n Q)"
-  by (simp add: H3_def ndesign_def unrest_pre_out\<alpha>)
+  by pred_auto
 
 theorem ndesign_is_H3 [closure]: "p \<turnstile>\<^sub>n Q is H3"
   by (simp add: H3_ndesign Healthy_def)
 
+(*
 lemma msubst_pre_H3: "(\<And>x. P x is H3) \<Longrightarrow> P x\<lbrakk>x\<rightarrow>\<lceil>v\<rceil>\<^sub><\<rbrakk> is H3"
   by (rel_auto)
+*)
 
 subsection \<open> Normal Designs as $H1$-$H3$ predicates \<close>
 
 text \<open> A normal design~\cite{Guttman2010} refers only to initial state variables in the precondition. \<close>
 
-abbreviation H1_H3 :: "('\<alpha>, '\<beta>) rel_des \<Rightarrow> ('\<alpha>, '\<beta>) rel_des" ("\<^bold>N") where
+abbreviation H1_H3 :: "('\<alpha>, '\<beta>) des_rel \<Rightarrow> ('\<alpha>, '\<beta>) des_rel" ("\<^bold>N") where
 "H1_H3 p \<equiv> H1 (H3 p)"
 
 lemma H1_H3_comp: "H1_H3 = H1 \<circ> H3"
@@ -728,17 +730,18 @@ lemma H1_H3_idempotent: "\<^bold>N (\<^bold>N P) = \<^bold>N P"
 lemma H1_H3_Idempotent [closure]: "Idempotent \<^bold>N"
   by (simp add: Idempotent_def H1_H3_idempotent)
 
+(*
 lemma H1_H3_monotonic [closure]: "Monotonic \<^bold>N"
   by (simp add: H1_monotone H3_mono mono_def)
 
 lemma H1_H3_Continuous [closure]: "Continuous \<^bold>N"
   by (simp add: Continuous_comp H1_Continuous H1_H3_comp H3_Continuous)
-
+*)
 lemma H1_H3_false: "\<^bold>N false = \<top>\<^sub>D"
-  by (rel_auto)
+  by (pred_auto)
 
 lemma H1_H3_true: "\<^bold>N true = \<bottom>\<^sub>D"
-  by (rel_auto)
+  by (pred_auto)
 
 lemma H1_H3_intro:
   assumes "P is \<^bold>H" "out\<alpha> \<sharp> pre\<^sub>D(P)"
@@ -766,9 +769,7 @@ lemma H1_H3_eq_design_d_comp: "\<^bold>N(P) = ((\<not> P\<^sup>f) \<turnstile> P
 lemma H1_H3_eq_design: "\<^bold>N(P) = (\<not> (P\<^sup>f ;; true)) \<turnstile> P\<^sup>t"
   apply (simp add: H1_H3_eq_design_d_comp skip_d_alt_def)
   apply (subst design_composition_subst)
-  apply (simp_all add: usubst unrest)
-  apply (rel_auto)
-done
+  by pred_auto+
 
 lemma H3_unrest_out_alpha_nok [unrest]:
   assumes "P is \<^bold>N"
@@ -777,15 +778,15 @@ proof -
   have "P = (\<not> (P\<^sup>f ;; true)) \<turnstile> P\<^sup>t"
     by (metis H1_H3_eq_design Healthy_def assms)
   also have "out\<alpha> \<sharp> (...\<^sup>f)"
-    by (simp add: design_def usubst unrest, rel_auto)
-  finally show ?thesis .
+    by (simp add: design_def usubst unrest, pred_auto)
+  ultimately show ?thesis by auto
 qed
 
 lemma H3_unrest_out_alpha [unrest]: "P is \<^bold>N \<Longrightarrow> out\<alpha> \<sharp> pre\<^sub>D(P)"
   by (metis H1_H3_commute H1_H3_is_rdesign H1_idem Healthy_def' precond_equiv rdesign_H3_iff_pre)
 
 lemma ndesign_H1_H3 [closure]: "p \<turnstile>\<^sub>n Q is \<^bold>N"
-  by (simp add: H1_rdesign H3_def Healthy_def' ndesign_def unrest_pre_out\<alpha>)
+  by (simp add: H1_rdesign H3_def Healthy_def', pred_auto)
 
 lemma ndesign_form: "P is \<^bold>N \<Longrightarrow> (\<lfloor>pre\<^sub>D(P)\<rfloor>\<^sub>< \<turnstile>\<^sub>n post\<^sub>D(P)) = P"
   by (metis H1_H2_eq_rdesign H1_H3_impl_H2 H3_unrest_out_alpha Healthy_def drop_pre_inv ndesign_def)
@@ -842,7 +843,7 @@ proof -
 qed
 
 lemma USUP_ind_H1_H3_closed [closure]:
-  "\<lbrakk> \<And> i. P i is \<^bold>N \<rbrakk> \<Longrightarrow> (\<Squnion> i \<bullet> P i) is \<^bold>N"
+  "\<lbrakk> \<And> i. P i is \<^bold>N \<rbrakk> \<Longrightarrow> (\<Squnion> i. P i) is \<^bold>N"
   by (rule H1_H3_intro, simp_all add: H1_H3_impl_H2 USUP_ind_H1_H2_closed preD_USUP_ind unrest)
 
 lemma msubst_pre_H1_H3 [closure]: "(\<And>x. P x is \<^bold>N) \<Longrightarrow> P x\<lbrakk>x\<rightarrow>\<lceil>v\<rceil>\<^sub><\<rbrakk> is \<^bold>N"
@@ -850,15 +851,15 @@ lemma msubst_pre_H1_H3 [closure]: "(\<And>x. P x is \<^bold>N) \<Longrightarrow>
 
 subsection \<open> H4: Feasibility \<close>
 
-definition H4 :: "('\<alpha>, '\<beta>) rel_des \<Rightarrow> ('\<alpha>, '\<beta>) rel_des" where
-[upred_defs]: "H4(P) = ((P;;true) \<Rightarrow> P)"
+definition H4 :: "('\<alpha>, '\<beta>) des_rel \<Rightarrow> ('\<alpha>, '\<beta>) des_rel" where
+[pred]: "H4(P) = ((P;;true) \<longrightarrow> P)\<^sub>e"
 
 theorem H4_idem:
   "H4(H4(P)) = H4(P)"
-  by (rel_auto)
+  by (pred_auto)
 
 lemma is_H4_alt_def:
   "P is H4 \<longleftrightarrow> (P ;; true) = true"
-  by (rel_blast)
+  by (pred_auto)
 
 end
