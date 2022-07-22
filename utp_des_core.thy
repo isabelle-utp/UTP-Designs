@@ -6,6 +6,7 @@ alphabet des_vars =
   ok :: bool
 
 type_synonym ('s\<^sub>1, 's\<^sub>2) des_rel = "'s\<^sub>1 des_vars_scheme \<leftrightarrow> 's\<^sub>2 des_vars_scheme"
+type_synonym ('s\<^sub>1) des_hrel = "'s\<^sub>1 des_vars_scheme \<leftrightarrow> 's\<^sub>1 des_vars_scheme"
 
 definition design where
 [rel]: "design P Q = ((ok\<^sup><)\<^sub>u \<and> P \<Rightarrow> (ok\<^sup>>)\<^sub>u \<and> Q)"
@@ -28,6 +29,8 @@ syntax
 
 translations
   "_svid_des_alpha" => "CONST des_vars.more\<^sub>L"
+
+
 
 lemma "false \<turnstile> true = true"
   by rel_auto
