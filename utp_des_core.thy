@@ -70,16 +70,16 @@ lemma design_composition:
   assumes "$ok\<^sup>> \<sharp> P1" "$ok\<^sup>< \<sharp> P2" "$ok\<^sup>> \<sharp> Q1" "$ok\<^sup>< \<sharp> Q2"
   shows "((P1 \<turnstile> Q1) ;; (P2 \<turnstile> Q2)) = (((\<not> ((\<not> P1) ;; true)) \<and> \<not> (Q1 ;; (\<not> P2))) \<turnstile> (Q1 ;; Q2))"
   using assms
-  apply (simp add: design_composition_subst, subst_eval)
-  apply (simp add: usubst)
+  by (simp add: design_composition_subst, subst_eval)
 
 theorem rdesign_composition:
   "((P1 \<turnstile>\<^sub>r Q1) ;; (P2 \<turnstile>\<^sub>r Q2)) = (((\<not> ((\<not> P1) ;; true)) \<and> \<not> (Q1 ;; (\<not> P2))) \<turnstile>\<^sub>r (Q1 ;; Q2))"
   by (simp add: rdesign_def design_composition unrest usubst, pred_auto)
 
-theorem ndesign_composition_wlp:
+(*theorem ndesign_composition_wlp:
   "(p\<^sub>1 \<turnstile>\<^sub>n Q\<^sub>1) ;; (p\<^sub>2 \<turnstile>\<^sub>n Q\<^sub>2) = (p\<^sub>1 \<and> Q\<^sub>1 wlp p\<^sub>2) \<turnstile>\<^sub>n (Q\<^sub>1 ;; Q\<^sub>2)"
   by (simp add: rdesign_composition unrest, pred_auto)
+*)
 
 definition skip_d :: "('\<alpha>,'\<alpha>) des_rel" ("II\<^sub>D") where 
   [rel]: "II\<^sub>D \<equiv> (true \<turnstile>\<^sub>r II)"
@@ -92,13 +92,14 @@ definition top_d :: "('\<alpha>, '\<beta>) des_rel" ("\<top>\<^sub>D") where
 
 lemma top_d_not_ok:
   "\<top>\<^sub>D = (\<not> ok\<^sup><)\<^sub>e"
-  unfolding top_d_def design_def by (expr_simp, simp add: Collect_neg_eq not_pred_def)
+  unfolding top_d_def design_def 
+  by (expr_simp, simp add: false_pred_def true_pred_def)
 
-definition pre_design :: "('\<alpha>, '\<beta>) des_rel \<Rightarrow> ('\<alpha> \<leftrightarrow> '\<beta>)" ("pre\<^sub>D") where
-  [rel]: "pre\<^sub>D(P) =  (\<not>P\<lbrakk>true,false/ok\<^sup><,ok\<^sup>>\<rbrakk>) \<down> more\<^sub>L\<^sup>2"
+definition pre_design :: "('\<alpha>, '\<beta>) des_rel \<Rightarrow> ('\<alpha>, '\<beta>) urel" ("pre\<^sub>D") where
+  [rel]: "pre\<^sub>D(P) =  (\<not>P\<lbrakk>True,False/ok\<^sup><,ok\<^sup>>\<rbrakk>) \<down> more\<^sub>L\<^sup>2"
 
-definition post_design :: "('\<alpha>, '\<beta>) des_rel \<Rightarrow> ('\<alpha> \<leftrightarrow> '\<beta>)" ("post\<^sub>D") where
-  [rel]: "post\<^sub>D(P) = P\<lbrakk>true,true/ok\<^sup><,ok\<^sup>>\<rbrakk> \<down> more\<^sub>L\<^sup>2"
+definition post_design :: "('\<alpha>, '\<beta>) des_rel \<Rightarrow> ('\<alpha>, '\<beta>) urel" ("post\<^sub>D") where
+  [rel]: "post\<^sub>D(P) = P\<lbrakk>True,True/ok\<^sup><,ok\<^sup>>\<rbrakk> \<down> more\<^sub>L\<^sup>2"
 
 syntax
   "_ok_f"  :: "logic \<Rightarrow> logic" ("_\<^sup>f" [1000] 1000)
