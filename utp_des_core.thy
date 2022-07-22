@@ -106,7 +106,7 @@ syntax
   "_ok_t"  :: "logic \<Rightarrow> logic" ("_\<^sup>t" [1000] 1000)
 
 translations
-  "P\<^sup>f" \<rightharpoonup> "_subst P false (_svid_post (CONST ok))"
-  "P\<^sup>t" \<rightharpoonup> "_subst P true (_svid_post (CONST ok))"
+  "P\<^sup>f" \<rightharpoonup> "_subst P (CONST False) (_svid_post (CONST ok))"
+  "P\<^sup>t" \<rightharpoonup> "_subst P (CONST True) (_svid_post (CONST ok))"
 
 end
