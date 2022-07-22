@@ -6,6 +6,7 @@ alphabet des_vars =
   ok :: bool
 
 type_synonym ('s\<^sub>1, 's\<^sub>2) des_rel = "('s\<^sub>1 des_vars_scheme, 's\<^sub>2 des_vars_scheme) urel"
+type_synonym ('s\<^sub>1) des_hrel = "('s\<^sub>1, 's\<^sub>1) des_rel"
 
 definition design where
 [pred]: "design P Q = ((ok\<^sup>< \<and> P) \<longrightarrow> (ok\<^sup>> \<and> Q))\<^sub>e"
