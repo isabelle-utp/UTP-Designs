@@ -4,6 +4,65 @@ begin
 
 named_theorems ndes and ndes_simp
 
+subsection \<open> Lifting, Unrestriction, and Substitution \<close>
+
+lemma drop_desr_inv [simp]: "((P \<up> more\<^sub>L\<^sup>2) \<down> more\<^sub>L\<^sup>2) = P"
+  by (simp add: ares_aext prod_vwb_lens)
+
+lemma lift_desr_inv:
+  fixes P :: "('\<alpha>, '\<beta>) des_rel"
+  assumes "$ok\<^sup>< \<sharp> P" "$ok\<^sup>> \<sharp> P"
+  shows "((P \<down> more\<^sub>L\<^sup>2) \<up> more\<^sub>L\<^sup>2) = P"
+  by (pred_auto assms: assms, (metis (no_types, lifting) des_vars.simps(4) des_vars.surjective)+)
+
+lemma unrest_out_des_lift [unrest]: "out\<alpha> \<sharp> p \<Longrightarrow> out\<alpha> \<sharp> (p \<up> more\<^sub>L\<^sup>2)"
+  by (pred_simp)
+
+lemma lift_dist_seq [simp]:
+  "(P ;; Q) \<up> more\<^sub>L\<^sup>2 = (P \<up> more\<^sub>L\<^sup>2 ;; Q \<up> more\<^sub>L\<^sup>2)"
+  by (pred_auto)
+
+lemma lift_des_skip_dr_unit [simp]:
+  "(P \<up> more\<^sub>L\<^sup>2 ;; II \<up> more\<^sub>L\<^sup>2) = P \<up> more\<^sub>L\<^sup>2"
+  "(II \<up> more\<^sub>L\<^sup>2 ;; P \<up> more\<^sub>L\<^sup>2) = P \<up> more\<^sub>L\<^sup>2"
+  by (pred_auto)+
+
+lemma lift_des_skip_dr_unit_unrest: "$ok\<^sup>> \<sharp> P \<Longrightarrow> (P ;; II \<up> more\<^sub>L\<^sup>2) = P"
+  by (pred_auto)
+
+(*
+lemma state_subst_design [usubst]:
+  "\<lceil>\<sigma> \<oplus>\<^sub>s \<Sigma>\<^sub>D\<rceil>\<^sub>s \<dagger> (P \<turnstile>\<^sub>r Q) = (\<lceil>\<sigma>\<rceil>\<^sub>s \<dagger> P) \<turnstile>\<^sub>r (\<lceil>\<sigma>\<rceil>\<^sub>s \<dagger> Q)"
+  by (rel_auto)
+*)
+
+lemma design_subst [usubst]:
+  "\<lbrakk> $ok\<^sup>< \<sharp>\<^sub>s \<sigma>; $ok\<^sup>> \<sharp>\<^sub>s \<sigma> \<rbrakk> \<Longrightarrow> \<sigma> \<dagger> (P \<turnstile> Q) = (\<sigma> \<dagger> P) \<turnstile> (\<sigma> \<dagger> Q)"
+  apply pred_auto
+        apply (smt (z3) des_vars.simps(1) des_vars.simps(3) des_vars.surjective prod.sel(1))
+       apply (smt (z3) des_vars.simps(1) des_vars.simps(3) des_vars.surjective prod.sel(1))
+      apply (smt (z3) des_vars.select_convs(1) des_vars.surjective des_vars.update_convs(1) snd_conv)
+     apply (smt (z3) des_vars.cases_scheme des_vars.select_convs(1) des_vars.update_convs(1) prod.exhaust_sel prod.inject)
+    apply (smt (z3) des_vars.cases_scheme des_vars.ext_inject des_vars.select_convs(1) des_vars.update_convs(1) fst_conv)
+   apply (smt (z3) des_vars.select_convs(1) des_vars.surjective des_vars.update_convs(1) snd_conv)
+  apply (smt (z3) des_vars.surjective des_vars.update_convs(1) prod.exhaust_sel)
+  done
+
+(*
+lemma design_msubst [usubst]:
+  "(P(x) \<turnstile> Q(x))\<lbrakk>x\<rightarrow>v\<rbrakk> = (P(x)\<lbrakk>x\<rightarrow>v\<rbrakk> \<turnstile> Q(x)\<lbrakk>x\<rightarrow>v\<rbrakk>)"
+  by (rel_auto)
+*)
+    
+lemma design_ok_false [usubst]: "(P \<turnstile> Q)\<lbrakk>False/ok\<^sup><\<rbrakk> = true"
+  by pred_auto
+
+lemma ok_pre: "(ok\<^sup>< \<and> pre\<^sub>D(P) \<up> more\<^sub>L\<^sup>2) = (ok\<^sup>< \<and> (\<not> P\<^sup>f))"
+  by (pred_auto, (metis (no_types, lifting) des_vars.surjective des_vars.update_convs(1) des_vars.update_convs(2))+)
+
+lemma ok_post: "(ok\<^sup>< \<and> post\<^sub>D(P) \<up> more\<^sub>L\<^sup>2) = (ok\<^sup>< \<and> (P\<^sup>t))"
+  by (pred_auto, (smt (z3) des_vars.surjective des_vars.update_convs(1) des_vars.update_convs(2))+)
+  
 subsection \<open> Basic Design Laws \<close>
 
 lemma design_export_ok: "(P \<turnstile> Q) = (P \<turnstile> (ok\<^sup>< \<and> Q))"
