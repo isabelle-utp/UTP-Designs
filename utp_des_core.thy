@@ -1,5 +1,5 @@
 theory utp_des_core
-  imports UTP2.utp_wlp
+  imports UTP2.utp_rel_laws
 begin 
 
 alphabet des_vars = 
