@@ -20,9 +20,9 @@ lemma H1_monotone:
   "P \<sqsubseteq> Q \<Longrightarrow> H1(P) \<sqsubseteq> H1(Q)"
   by (pred_auto)
 
-(*lemma H1_Continuous: "Continuous H1"
-  by (rel_auto)
-*)
+lemma H1_Continuous: "Continuous H1"
+  by (pred_auto)
+
 lemma H1_below_top:
   "H1(P) \<sqsubseteq> \<top>\<^sub>D"
   by (pred_auto)
@@ -242,12 +242,12 @@ theorem H2_equivalence:
 proof -
   have "`(P \<longleftrightarrow> (P ;; J))` \<longleftrightarrow> `(P \<longleftrightarrow> (P\<^sup>f \<or> (P\<^sup>t \<and> ok\<^sup>>)))`"
     by (simp add: J_split)
-  also have "... \<longleftrightarrow> `\<lbrakk>(P \<Leftrightarrow> P\<^sup>f \<or> P\<^sup>t \<and> (ok\<^sup>>)\<^sub>u)\<^sup>f \<and> (P \<Leftrightarrow> P\<^sup>f \<or> P\<^sup>t \<and> (ok\<^sup>>)\<^sub>u)\<rbrakk>\<^sub>P`"
+  also have "... \<longleftrightarrow> `\<lbrakk>(P \<longleftrightarrow> P\<^sup>f \<or> P\<^sup>t \<and> (ok\<^sup>>)\<^sub>e)\<^sup>f \<and> (P \<longleftrightarrow> P\<^sup>f \<or> P\<^sup>t \<and> (ok\<^sup>>)\<^sub>e)\<rbrakk>\<^sub>P`"
     by rel_auto
-  also have "... = `\<lbrakk>(P\<^sup>f \<Leftrightarrow> P\<^sup>f) \<and> (P\<^sup>t \<Leftrightarrow> P\<^sup>f \<or> P\<^sup>t)\<rbrakk>\<^sub>P`"
+  also have "... = `\<lbrakk>(P\<^sup>f \<longleftrightarrow> P\<^sup>f) \<and> (P\<^sup>t \<longleftrightarrow> P\<^sup>f \<or> P\<^sup>t)\<rbrakk>\<^sub>P`"
     apply pred_auto
     by metis+
-  also have "... = `\<lbrakk>P\<^sup>t \<Leftrightarrow> (P\<^sup>f \<or> P\<^sup>t)\<rbrakk>\<^sub>P`"
+  also have "... = `\<lbrakk>P\<^sup>t \<longleftrightarrow> (P\<^sup>f \<or> P\<^sup>t)\<rbrakk>\<^sub>P`"
     by (pred_auto)
   also have "... = `P\<^sup>f \<longrightarrow> P\<^sup>t`"
     by (pred_auto)

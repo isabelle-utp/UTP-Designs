@@ -36,17 +36,12 @@ lemma state_subst_design [usubst]:
   by (rel_auto)
 *)
 
+lemma get_unrest_subst [usubst_eval]: "\<lbrakk> vwb_lens x; $x \<sharp>\<^sub>s \<sigma> \<rbrakk> \<Longrightarrow> get\<^bsub>x\<^esub> (\<sigma> s) = get\<^bsub>x\<^esub> s"
+  by (expr_simp, metis vwb_lens_wb wb_lens.get_put wb_lens_weak weak_lens.view_determination)
+
 lemma design_subst [usubst]:
   "\<lbrakk> $ok\<^sup>< \<sharp>\<^sub>s \<sigma>; $ok\<^sup>> \<sharp>\<^sub>s \<sigma> \<rbrakk> \<Longrightarrow> \<sigma> \<dagger> (P \<turnstile> Q) = (\<sigma> \<dagger> P) \<turnstile> (\<sigma> \<dagger> Q)"
-  apply pred_auto
-        apply (smt (z3) des_vars.simps(1) des_vars.simps(3) des_vars.surjective prod.sel(1))
-       apply (smt (z3) des_vars.simps(1) des_vars.simps(3) des_vars.surjective prod.sel(1))
-      apply (smt (z3) des_vars.select_convs(1) des_vars.surjective des_vars.update_convs(1) snd_conv)
-     apply (smt (z3) des_vars.cases_scheme des_vars.select_convs(1) des_vars.update_convs(1) prod.exhaust_sel prod.inject)
-    apply (smt (z3) des_vars.cases_scheme des_vars.ext_inject des_vars.select_convs(1) des_vars.update_convs(1) fst_conv)
-   apply (smt (z3) des_vars.select_convs(1) des_vars.surjective des_vars.update_convs(1) snd_conv)
-  apply (smt (z3) des_vars.surjective des_vars.update_convs(1) prod.exhaust_sel)
-  done
+  by (simp add: pred, subst_eval, simp add: subst_app_def)
 
 (*
 lemma design_msubst [usubst]:
