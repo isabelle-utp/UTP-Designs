@@ -8,6 +8,37 @@ alphabet des_vars =
 type_synonym ('s\<^sub>1, 's\<^sub>2) des_rel = "('s\<^sub>1 des_vars_scheme, 's\<^sub>2 des_vars_scheme) urel"
 type_synonym ('s\<^sub>1) des_hrel = "('s\<^sub>1, 's\<^sub>1) des_rel"
 
+syntax
+  "_svid_des_alpha"  :: "svid" ("\<^bold>v\<^sub>D")
+
+translations
+  "_svid_des_alpha" => "CONST des_vars.more\<^sub>L"
+
+text \<open> The following notations define liftings from non-design predicates into design
+  predicates using alphabet extensions. \<close>
+
+abbreviation lift_desr ("\<lceil>_\<rceil>\<^sub>D")
+where "\<lceil>P\<rceil>\<^sub>D \<equiv> P \<up> (\<^bold>v\<^sub>D \<times> \<^bold>v\<^sub>D)"
+
+expr_ctr lift_desr
+
+abbreviation lift_pre_desr ("\<lceil>_\<rceil>\<^sub>D\<^sub><")
+where "\<lceil>p\<rceil>\<^sub>D\<^sub>< \<equiv> \<lceil>p\<^sup><\<rceil>\<^sub>D"
+
+expr_ctr lift_pre_desr
+
+abbreviation lift_post_desr ("\<lceil>_\<rceil>\<^sub>D\<^sub>>")
+where "\<lceil>p\<rceil>\<^sub>D\<^sub>> \<equiv> \<lceil>p\<^sup>>\<rceil>\<^sub>D"
+
+abbreviation drop_desr ("\<lfloor>_\<rfloor>\<^sub>D")
+where "\<lfloor>P\<rfloor>\<^sub>D \<equiv> P \<down> (\<^bold>v\<^sub>D \<times> \<^bold>v\<^sub>D)"
+
+abbreviation dcond :: "('\<alpha>, '\<beta>) des_rel \<Rightarrow> '\<alpha> pred \<Rightarrow> ('\<alpha>, '\<beta>) des_rel \<Rightarrow> ('\<alpha>, '\<beta>) des_rel" 
+where "dcond P b Q \<equiv> P \<triangleleft> \<lceil>b\<rceil>\<^sub>D\<^sub>< \<triangleright> Q"
+
+syntax "_dcond" :: "logic \<Rightarrow> logic \<Rightarrow> logic \<Rightarrow> logic" ("(3_ \<triangleleft> _ \<triangleright>\<^sub>D/ _)" [52,0,53] 52)
+translations "_dcond P b Q" == "CONST dcond P (b)\<^sub>e Q"
+
 definition design where
 [pred]: "design P Q = ((ok\<^sup>< \<and> P) \<longrightarrow> (ok\<^sup>> \<and> Q))\<^sub>e"
 
@@ -41,8 +72,6 @@ lemma design_union: "((P\<^sub>1 \<turnstile> Q\<^sub>1) \<or> (P\<^sub>2 \<turn
 
 lemma design_cond: "(P\<^sub>1 \<turnstile> Q\<^sub>1) \<lhd> b \<rhd> (P\<^sub>2 \<turnstile> Q\<^sub>2) = (P\<^sub>1 \<lhd> b \<rhd> P\<^sub>2) \<turnstile> (Q\<^sub>1 \<lhd> b \<rhd> Q\<^sub>2)"
   by pred_auto
-
-expr_ctr utrue
 
 definition skip_d :: "('\<alpha>,'\<alpha>) des_rel" ("II\<^sub>D") where 
   [pred]: "II\<^sub>D \<equiv> (true \<turnstile>\<^sub>r II)"

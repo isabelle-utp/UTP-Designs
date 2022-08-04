@@ -96,28 +96,28 @@ lemma rdesign_false_pre: "(false \<turnstile>\<^sub>r P) = true"
 lemma ndesign_false_pre: "(False \<turnstile>\<^sub>n P) = true"
   by (pred_auto)
 
-lemma ndesign_miracle: "(true \<turnstile>\<^sub>n false) = \<top>\<^sub>D"
+lemma ndesign_miracle: "(True \<turnstile>\<^sub>n false) = \<top>\<^sub>D"
   by (pred_auto)
 
-lemma top_d_ndes_def [ndes_simp]: "\<top>\<^sub>D = (true \<turnstile>\<^sub>n false)"
+lemma top_d_ndes_def [ndes_simp]: "\<top>\<^sub>D = (True \<turnstile>\<^sub>n false)"
   by (pred_auto)
 
 lemma skip_d_alt_def: "II\<^sub>D = true \<turnstile> II"
   by (pred_auto)
 
-lemma skip_d_ndes_def [ndes_simp]: "II\<^sub>D = true \<turnstile>\<^sub>n II"
+lemma skip_d_ndes_def [ndes_simp]: "II\<^sub>D = True \<turnstile>\<^sub>n II"
   by (pred_auto)
 
 lemma design_subst_ok:
-  "(P\<lbrakk>true/ok\<^sup><\<rbrakk> \<turnstile> Q\<lbrakk>true/ok\<^sup><\<rbrakk>) = (P \<turnstile> Q)"
+  "(P\<lbrakk>True/ok\<^sup><\<rbrakk> \<turnstile> Q\<lbrakk>True/ok\<^sup><\<rbrakk>) = (P \<turnstile> Q)"
   by (pred_auto)
 
 lemma design_subst_ok_ok':
-  "(P\<lbrakk>true/ok\<^sup><\<rbrakk> \<turnstile> Q\<lbrakk>true,true/ok\<^sup><,ok\<^sup>>\<rbrakk>) = (P \<turnstile> Q)"
+  "(P\<lbrakk>True/ok\<^sup><\<rbrakk> \<turnstile> Q\<lbrakk>True,True/ok\<^sup><,ok\<^sup>>\<rbrakk>) = (P \<turnstile> Q)"
   by pred_auto
 
 lemma design_subst_ok':
-  "(P \<turnstile> Q\<lbrakk>true/ok\<^sup>>\<rbrakk>) = (P \<turnstile> Q)"
+  "(P \<turnstile> Q\<lbrakk>True/ok\<^sup>>\<rbrakk>) = (P \<turnstile> Q)"
   by pred_auto
 
 subsection \<open> Sequential Composition Laws \<close>
@@ -160,9 +160,9 @@ proof -
   also have " ...
         = (((P1 \<turnstile> Q1)\<lbrakk>False/ok\<^sup>>\<rbrakk> ;; (P2 \<turnstile> Q2)\<lbrakk>False/ok\<^sup><\<rbrakk>)
             \<or> ((P1 \<turnstile> Q1)\<lbrakk>True/ok\<^sup>>\<rbrakk> ;; (P2 \<turnstile> Q2)\<lbrakk>True/ok\<^sup><\<rbrakk>))"
-    by (pred_auto; metis (full_types))
+    by (pred_auto; (metis (full_types)))
   also from assms
-  have "... = (((ok\<^sup>< \<and> P1 \<longrightarrow> Q1\<lbrakk>True/ok\<^sup>>\<rbrakk>) ;; (P2 \<longrightarrow> ok\<^sup>> \<and> Q2\<lbrakk>True/ok\<^sup><\<rbrakk>)) \<or> ((\<not> (ok\<^sup>< \<and> P1)) ;; true))\<^sub>e"
+  have "... = (((ok\<^sup>< \<and> P1 \<longrightarrow> Q1\<lbrakk>True/ok\<^sup>>\<rbrakk>) ;; (P2 \<longrightarrow> ok\<^sup>> \<and> Q2\<lbrakk>True/ok\<^sup><\<rbrakk>)) \<or> ((\<not> (ok\<^sup>< \<and> P1)) ;; true))"
     by (simp add: design_def usubst usubst_eval)
        (pred_auto; blast)
   also have "... = (((\<not>ok\<^sup><)\<^sub>e ;; true\<^sub>h) \<or> ((\<not>P1) ;; true) \<or> (Q1\<lbrakk>True/ok\<^sup>>\<rbrakk> ;; (\<not>P2)) \<or> ((ok\<^sup>>)\<^sub>e \<and> (Q1\<lbrakk>True/ok\<^sup>>\<rbrakk> ;; Q2\<lbrakk>True/ok\<^sup><\<rbrakk>)))"
@@ -180,7 +180,7 @@ lemma design_composition:
 
 theorem rdesign_composition:
   "((P1 \<turnstile>\<^sub>r Q1) ;; (P2 \<turnstile>\<^sub>r Q2)) = (((\<not> ((\<not> P1) ;; true)) \<and> \<not> (Q1 ;; (\<not> P2))) \<turnstile>\<^sub>r (Q1 ;; Q2))"
-  by (simp add: rdesign_def design_composition unrest usubst, pred_auto)
+  by (simp add: rdesign_def design_composition unrest usubst)
 
 theorem ndesign_composition_wlp:
   "(p\<^sub>1 \<turnstile>\<^sub>n Q\<^sub>1) ;; (p\<^sub>2 \<turnstile>\<^sub>n Q\<^sub>2) = (p\<^sub>1 \<and> Q\<^sub>1 wlp p\<^sub>2) \<turnstile>\<^sub>n (Q\<^sub>1 ;; Q\<^sub>2)"
@@ -253,11 +253,11 @@ lemma design_post_choice [simp]:
   by (pred_auto)
 
 lemma design_pre_condr [simp]:
-  "pre\<^sub>D(P \<lhd> b \<up> des_vars.more\<^sub>L\<^sup>2 \<rhd> Q) = (pre\<^sub>D(P) \<lhd> b \<rhd> pre\<^sub>D(Q))"
+  "pre\<^sub>D(P \<triangleleft> b \<up> des_vars.more\<^sub>L\<^sup>2 \<triangleright> Q) = (pre\<^sub>D(P) \<triangleleft> b \<triangleright> pre\<^sub>D(Q))"
   by (pred_auto)
 
 lemma design_post_condr [simp]:
-  shows "post\<^sub>D(P \<lhd> b \<up> des_vars.more\<^sub>L\<^sup>2 \<rhd> Q) = (post\<^sub>D(P) \<lhd> b \<rhd> post\<^sub>D(Q))"
+  shows "post\<^sub>D(P \<triangleleft> b \<up> des_vars.more\<^sub>L\<^sup>2 \<triangleright> Q) = (post\<^sub>D(P) \<triangleleft> b \<triangleright> post\<^sub>D(Q))"
   by (pred_auto)
 
 lemma preD_USUP_mem: "pre\<^sub>D (\<Squnion> i\<in>A.  P i) = (\<Sqinter> i\<in>A. pre\<^sub>D(P i))"
@@ -301,7 +301,7 @@ theorem design_condr:
   by (pred_auto)
 
 theorem ndesign_dcond [ndes_simp]:
-  shows "((p\<^sub>1 \<turnstile>\<^sub>n P\<^sub>2) \<lhd> b\<^sup>< \<up> more\<^sub>L\<^sup>2 \<rhd> (q\<^sub>1 \<turnstile>\<^sub>n Q\<^sub>2)) = ((p\<^sub>1 \<triangleleft> b \<triangleright> q\<^sub>1) \<turnstile>\<^sub>n (P\<^sub>2 \<lhd> b\<^sup>< \<rhd> Q\<^sub>2))"
+  shows "((p\<^sub>1 \<turnstile>\<^sub>n P\<^sub>2) \<triangleleft> b\<^sup>< \<up> more\<^sub>L\<^sup>2 \<triangleright> (q\<^sub>1 \<turnstile>\<^sub>n Q\<^sub>2)) = ((p\<^sub>1 \<triangleleft> b \<triangleright> q\<^sub>1) \<turnstile>\<^sub>n (P\<^sub>2 \<triangleleft> b\<^sup>< \<triangleright> Q\<^sub>2))"
   by (pred_auto)
 
 lemma design_UINF_mem:
