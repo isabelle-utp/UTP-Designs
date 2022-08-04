@@ -810,12 +810,28 @@ lemma dcond_H1_H2_closed [closure]:
 lemma inf_H1_H2_closed [closure]:
   assumes "P is \<^bold>N" "Q is \<^bold>N"
   shows "(P \<sqinter> Q) is \<^bold>N"
-  by (metis assms ndesign_H1_H3 ndesign_choice ndesign_form)
+proof -
+  obtain P\<^sub>1 P\<^sub>2 Q\<^sub>1 Q\<^sub>2 where P:"P = (P\<^sub>1 \<turnstile>\<^sub>n P\<^sub>2)" and Q:"Q = (Q\<^sub>1 \<turnstile>\<^sub>n Q\<^sub>2)"
+    by (metis assms ndesign_form)
+  have "(P\<^sub>1 \<turnstile>\<^sub>n P\<^sub>2) \<sqinter> (Q\<^sub>1 \<turnstile>\<^sub>n Q\<^sub>2) = (P\<^sub>1 \<and> Q\<^sub>1) \<turnstile>\<^sub>n (P\<^sub>2 \<or> Q\<^sub>2)"
+    by (simp add: ndesign_choice)
+  moreover have "... is \<^bold>N"
+    by (simp add: ndesign_H1_H3)
+  ultimately show ?thesis by (simp add: P Q)
+qed
 
 lemma sup_H1_H2_closed [closure]:
   assumes "P is \<^bold>N" "Q is \<^bold>N"
   shows "(P \<squnion> Q) is \<^bold>N"
-  by (metis assms ndesign_H1_H3 ndesign_inf ndesign_form)
+proof -
+  obtain P\<^sub>1 P\<^sub>2 Q\<^sub>1 Q\<^sub>2 where P:"P = (P\<^sub>1 \<turnstile>\<^sub>n P\<^sub>2)" and Q:"Q = (Q\<^sub>1 \<turnstile>\<^sub>n Q\<^sub>2)"
+    by (metis assms ndesign_form)
+  have "(P\<^sub>1 \<turnstile>\<^sub>n P\<^sub>2) \<squnion> (Q\<^sub>1 \<turnstile>\<^sub>n Q\<^sub>2) = (P\<^sub>1 \<or> Q\<^sub>1) \<turnstile>\<^sub>n ((P\<^sub>1\<^sup>< \<longrightarrow> P\<^sub>2) \<and> (Q\<^sub>1\<^sup>< \<longrightarrow> Q\<^sub>2))"
+    by (simp add: ndesign_inf)
+  moreover have "... is \<^bold>N"
+    by (simp add: ndesign_H1_H3)
+  ultimately show ?thesis by (simp add: P Q)
+qed
     
 lemma ndes_seqr_miracle:
   assumes "P is \<^bold>N"
