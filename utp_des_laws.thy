@@ -52,6 +52,7 @@ lemma design_msubst [usubst]:
 lemma design_ok_false [usubst]: "(P \<turnstile> Q)\<lbrakk>False/ok\<^sup><\<rbrakk> = true"
   by pred_auto
 
+
 lemma ok_pre: "(ok\<^sup>< \<and> pre\<^sub>D(P) \<up> more\<^sub>L\<^sup>2) = (ok\<^sup>< \<and> (\<not> P\<^sup>f))"
   by (pred_auto, (metis (no_types, lifting) des_vars.surjective des_vars.update_convs(1) des_vars.update_convs(2))+)
 
@@ -293,7 +294,7 @@ theorem rdesign_inf:
   by (pred_auto)
 
 theorem ndesign_inf [ndes_simp]:
-  "(p\<^sub>1 \<turnstile>\<^sub>n P\<^sub>2) \<squnion> (q\<^sub>1 \<turnstile>\<^sub>n Q\<^sub>2) = ((p\<^sub>1 \<or> q\<^sub>1) \<turnstile>\<^sub>n ((p\<^sub>1\<^sup>< \<longrightarrow> P\<^sub>2) \<and> (q\<^sub>1\<^sup>< \<longrightarrow> Q\<^sub>2))\<^sub>e)"
+  "(p\<^sub>1 \<turnstile>\<^sub>n P\<^sub>2) \<squnion> (q\<^sub>1 \<turnstile>\<^sub>n Q\<^sub>2) = ((p\<^sub>1 \<or> q\<^sub>1) \<turnstile>\<^sub>n ((p\<^sub>1\<^sup>< \<longrightarrow> P\<^sub>2) \<and> (q\<^sub>1\<^sup>< \<longrightarrow> Q\<^sub>2)))"
   by (pred_auto)
     
 theorem design_condr:
