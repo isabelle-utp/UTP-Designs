@@ -23,12 +23,12 @@ text \<open> The following notations define liftings from non-design predicates 
 abbreviation lift_desr ("\<lceil>_\<rceil>\<^sub>D")
 where "\<lceil>P\<rceil>\<^sub>D \<equiv> P \<up> (\<^bold>v\<^sub>D \<times> \<^bold>v\<^sub>D)"
 
-expr_ctr lift_desr
+expr_constructor lift_desr
 
 abbreviation lift_pre_desr ("\<lceil>_\<rceil>\<^sub>D\<^sub><")
 where "\<lceil>p\<rceil>\<^sub>D\<^sub>< \<equiv> \<lceil>p\<^sup><\<rceil>\<^sub>D"
 
-expr_ctr lift_pre_desr
+expr_constructor lift_pre_desr
 
 abbreviation lift_post_desr ("\<lceil>_\<rceil>\<^sub>D\<^sub>>")
 where "\<lceil>p\<rceil>\<^sub>D\<^sub>> \<equiv> \<lceil>p\<^sup>>\<rceil>\<^sub>D"
@@ -79,17 +79,17 @@ lemma design_cond: "(P\<^sub>1 \<turnstile> Q\<^sub>1) \<lhd> b \<rhd> (P\<^sub>
 definition skip_d :: "('\<alpha>,'\<alpha>) des_rel" ("II\<^sub>D") where 
   [pred]: "II\<^sub>D \<equiv> (true \<turnstile>\<^sub>r II)"
 
-expr_ctr skip_d
+expr_constructor skip_d
 
 definition bot_d :: "('\<alpha>, '\<beta>) des_rel" ("\<bottom>\<^sub>D") where
   [pred]: "\<bottom>\<^sub>D = (false \<turnstile> false)"
 
-expr_ctr bot_d
+expr_constructor bot_d
 
 definition top_d :: "('\<alpha>, '\<beta>) des_rel" ("\<top>\<^sub>D") where
   [pred]: "\<top>\<^sub>D = (true \<turnstile> false)"
 
-expr_ctr top_d
+expr_constructor top_d
 
 lemma top_d_not_ok:
   "\<top>\<^sub>D = (\<not> ok\<^sup><)\<^sub>e"
@@ -99,12 +99,12 @@ lemma top_d_not_ok:
 definition pre_design :: "('\<alpha>, '\<beta>) des_rel \<Rightarrow> ('\<alpha>, '\<beta>) urel" ("pre\<^sub>D") where
   [pred]: "pre\<^sub>D(P) =  (\<not>P\<lbrakk>True,False/ok\<^sup><,ok\<^sup>>\<rbrakk>) \<down> more\<^sub>L\<^sup>2"
 
-expr_ctr pre_design
+expr_constructor pre_design
 
 definition post_design :: "('\<alpha>, '\<beta>) des_rel \<Rightarrow> ('\<alpha>, '\<beta>) urel" ("post\<^sub>D") where
   [pred]: "post\<^sub>D(P) = P\<lbrakk>True,True/ok\<^sup><,ok\<^sup>>\<rbrakk> \<down> more\<^sub>L\<^sup>2"
 
-expr_ctr post_design
+expr_constructor post_design
 
 syntax
   "_ok_f"  :: "logic \<Rightarrow> logic" ("_\<^sup>f" [1000] 1000)

@@ -10,7 +10,7 @@ subsection \<open> H1: No observation is allowed before initiation \<close>
 definition H1 :: "('\<alpha>, '\<beta>) des_rel \<Rightarrow> ('\<alpha>, '\<beta>) des_rel" where
 [pred, rel]: "H1(P) = (ok\<^sup>< \<longrightarrow> P)"
 
-expr_ctr H1
+expr_constructor H1
 
 lemma H1_idem:
   "H1 (H1 P) = H1(P)"
@@ -193,7 +193,7 @@ definition J :: "'\<alpha> des_hrel" where
 definition H2 where
 [pred]: "H2 (P) \<equiv> P ;; J"
 
-expr_ctr H2
+expr_constructor H2
 
 lemma J_split:
   shows "(P ;; J) = (P\<^sup>f \<or> (P\<^sup>t \<and> ok\<^sup>>))"

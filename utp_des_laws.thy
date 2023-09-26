@@ -340,14 +340,12 @@ lemma ndesign_eq_intro:
   shows "p\<^sub>1 \<turnstile>\<^sub>n P\<^sub>2 = q\<^sub>1 \<turnstile>\<^sub>n Q\<^sub>2"
   by (simp add: assms)
 
-
 theorem design_refinement:
   assumes
     "$ok\<^sup>< \<sharp> P1" "$ok\<^sup>> \<sharp> P1" "$ok\<^sup>< \<sharp> P2" "$ok\<^sup>> \<sharp> P2"
     "$ok\<^sup>< \<sharp> Q1" "$ok\<^sup>> \<sharp> Q1" "$ok\<^sup>< \<sharp> Q2" "$ok\<^sup>> \<sharp> Q2"
   shows "((P1 \<turnstile> Q1) \<sqsubseteq> (P2 \<turnstile> Q2)) \<longleftrightarrow> `(P1 \<longrightarrow> P2) \<and> (P1 \<and> Q2 \<longrightarrow> Q1)`"
-  by (pred_auto assms: assms, smt+)
-
+  by (pred_auto assms: assms; metis)
 
 theorem rdesign_refinement:
   "(P1 \<turnstile>\<^sub>r Q1 \<sqsubseteq> P2 \<turnstile>\<^sub>r Q2) \<longleftrightarrow> `P1 \<longrightarrow> P2` \<and> `P1 \<and> Q2 \<longrightarrow> Q1`"
