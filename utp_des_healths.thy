@@ -582,14 +582,12 @@ theorem H3_mono:
   "P \<sqsubseteq> Q \<Longrightarrow> H3(P) \<sqsubseteq> H3(Q)"
   by (simp add: H3_def seqr_mono)
 
-(*
 theorem H3_Monotonic:
   "Monotonic H3"
-  by (simp add: H3_mono mono_def)
+  using H3_mono Monotonic_refine by blast
 
 theorem H3_Continuous: "Continuous H3"
-  by (rel_auto)
-*)
+  by pred_auto
 
 theorem design_condition_is_H3:
   assumes "out\<alpha> \<sharp> p"
@@ -727,13 +725,16 @@ lemma H1_H3_idempotent: "\<^bold>N (\<^bold>N P) = \<^bold>N P"
 lemma H1_H3_Idempotent [closure]: "Idempotent \<^bold>N"
   by (simp add: Idempotent_def H1_H3_idempotent)
 
-(*
 lemma H1_H3_monotonic [closure]: "Monotonic \<^bold>N"
-  by (simp add: H1_monotone H3_mono mono_def)
+  by (simp add: H1_monotone H3_mono Monotonic_refine)
 
 lemma H1_H3_Continuous [closure]: "Continuous \<^bold>N"
   by (simp add: Continuous_comp H1_Continuous H1_H3_comp H3_Continuous)
-*)
+
+interpretation normal_design_thy: utp_theory_continuous "\<^bold>N"
+  rewrites "le (utp_order \<^bold>N) = (\<sqsubseteq>)" and "carrier normal_design_thy.thy_order = \<lbrakk>\<^bold>N\<rbrakk>\<^sub>H"
+  by (unfold_locales, simp_all add: closure)
+
 lemma H1_H3_false: "\<^bold>N false = \<top>\<^sub>D"
   by (pred_auto)
 
@@ -855,9 +856,9 @@ proof -
   finally show ?thesis .
 qed
 
-lemma USUP_ind_H1_H3_closed [closure]:
-  "\<lbrakk> \<And> i. P i is \<^bold>N \<rbrakk> \<Longrightarrow> (\<Squnion> i. P i) is \<^bold>N"
-  by (rule H1_H3_intro, simp_all add: H1_H3_impl_H2 USUP_ind_H1_H2_closed preD_USUP_ind unrest)
+lemma USUP_mem_H1_H3_closed [closure]:
+  "\<lbrakk> \<And> i. i \<in> I \<Longrightarrow> P i is \<^bold>N \<rbrakk> \<Longrightarrow> (\<Squnion> i\<in>I. P i) is \<^bold>N"
+  by (rule H1_H3_intro; simp add: H1_H3_impl_H2 USUP_mem_H1_H2_closed H3_unrest_out_alpha preD_USUP_mem unrest_INF_SUP(2))
 
 (*
 lemma msubst_pre_H1_H3 [closure]: "(\<And>x. P x is \<^bold>N) \<Longrightarrow> P x\<lbrakk>x\<rightarrow>\<lceil>v\<rceil>\<^sub><\<rbrakk> is \<^bold>N"
