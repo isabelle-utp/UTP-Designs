@@ -302,7 +302,7 @@ theorem design_condr:
   by (pred_auto)
 
 theorem ndesign_dcond [ndes_simp]:
-  shows "((p\<^sub>1 \<turnstile>\<^sub>n P\<^sub>2) \<triangleleft> b\<^sup>< \<up> more\<^sub>L\<^sup>2 \<triangleright> (q\<^sub>1 \<turnstile>\<^sub>n Q\<^sub>2)) = ((p\<^sub>1 \<triangleleft> b \<triangleright> q\<^sub>1) \<turnstile>\<^sub>n (P\<^sub>2 \<triangleleft> b\<^sup>< \<triangleright> Q\<^sub>2))"
+  shows "(dcond (p\<^sub>1 \<turnstile>\<^sub>n P\<^sub>2) b (q\<^sub>1 \<turnstile>\<^sub>n Q\<^sub>2)) = ((p\<^sub>1 \<triangleleft> b \<triangleright> q\<^sub>1) \<turnstile>\<^sub>n (P\<^sub>2 \<triangleleft> b\<^sup>< \<triangleright> Q\<^sub>2))"
   by (pred_auto)
 
 lemma design_UINF_mem:

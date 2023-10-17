@@ -37,7 +37,7 @@ abbreviation drop_desr ("\<lfloor>_\<rfloor>\<^sub>D")
 where "\<lfloor>P\<rfloor>\<^sub>D \<equiv> P \<down> (\<^bold>v\<^sub>D \<times> \<^bold>v\<^sub>D)"
 
 abbreviation dcond :: "('\<alpha>, '\<beta>) des_rel \<Rightarrow> '\<alpha> pred \<Rightarrow> ('\<alpha>, '\<beta>) des_rel \<Rightarrow> ('\<alpha>, '\<beta>) des_rel" 
-where "dcond P b Q \<equiv> P \<triangleleft> \<lceil>b\<rceil>\<^sub>D\<^sub>< \<triangleright> Q"
+where "dcond P b Q \<equiv> P \<lhd> (b \<up> \<^bold>v\<^sub>D) \<rhd> Q"
 
 syntax "_dcond" :: "logic \<Rightarrow> logic \<Rightarrow> logic \<Rightarrow> logic" ("(3_ \<triangleleft> _ \<triangleright>\<^sub>D/ _)" [52,0,53] 52)
 translations "_dcond P b Q" == "CONST dcond P (b)\<^sub>e Q"
