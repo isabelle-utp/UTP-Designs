@@ -219,6 +219,37 @@ theorem design_bot_left_zero: "(\<bottom>\<^sub>D ;; (P \<turnstile> Q)) = \<bot
 theorem design_top_left_zero: "(\<top>\<^sub>D ;; (P \<turnstile> Q)) = \<top>\<^sub>D"
   by (pred_auto)
 
+lemma ndesign_Suc_power: "(p \<turnstile>\<^sub>n Q)\<^bold>^ Suc n = ((\<forall> i\<in>{0..\<guillemotleft>n\<guillemotright>}. (Q \<^bold>^ i) wlp p) \<turnstile>\<^sub>n (Q \<^bold>^ Suc n))" 
+proof (induct n)
+  case 0
+  then show ?case 
+    by (simp del: SEXP_apply add: wp)
+next
+  case (Suc n)
+  then show ?case
+  proof -
+    have "p \<turnstile>\<^sub>n Q \<^bold>^ Suc (Suc n) = p \<turnstile>\<^sub>n Q ;; p \<turnstile>\<^sub>n Q \<^bold>^ Suc n"
+      by (simp del: SEXP_apply add: upred_semiring.power.power_Suc Suc)
+    also have "... = p \<turnstile>\<^sub>n Q ;; (\<forall>i\<in>{0..\<guillemotleft>n\<guillemotright>}. Q \<^bold>^ i wlp p) \<turnstile>\<^sub>n (Q \<^bold>^ Suc n)"
+      by (simp only: Suc)
+    also have "... = (p \<and> Q wlp (\<forall>i\<in>{0..\<guillemotleft>n\<guillemotright>}. Q \<^bold>^ i wlp p)) \<turnstile>\<^sub>n (Q ;; Q \<^bold>^ Suc n)"
+      by (simp add: ndesign_composition_wlp)
+    also have "... = (\<forall>i\<in>{0..\<guillemotleft>Suc n\<guillemotright>}. Q \<^bold>^ i wlp p) \<turnstile>\<^sub>n (Q ;; Q \<^bold>^ Suc n)"
+    proof -
+      have "(p \<and> Q wlp (\<forall>i\<in>{0..\<guillemotleft>n\<guillemotright>}. Q \<^bold>^ i wlp p))\<^sub>e = (p \<and> (\<forall>i\<in>{0..\<guillemotleft>n\<guillemotright>}. Q \<^bold>^ Suc i wlp p))\<^sub>e"
+        by (simp add: upred_semiring.power_Suc wp, pred_auto)
+      also have "... = (p \<and> (\<forall>i\<in>{1..\<guillemotleft>Suc n\<guillemotright>}. Q \<^bold>^ i wlp p))\<^sub>e"
+        by (pred_auto, metis Suc_le_D Suc_le_mono atLeastAtMost_iff least_zero)
+      also have "... = (\<forall>i\<in>{0..\<guillemotleft>Suc n\<guillemotright>}. Q \<^bold>^ i wlp p)\<^sub>e"
+        by (pred_simp, simp add: atLeast0_atMost_Suc_eq_insert_0 power.power_eq_if)
+      finally show ?thesis by simp
+    qed
+    finally show ?case
+      by (metis upred_semiring.power_Suc)
+  qed
+qed
+
+
 subsection \<open> Preconditions and Postconditions \<close>
 
 theorem design_npre:
