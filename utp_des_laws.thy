@@ -428,6 +428,6 @@ lemma design_bottom:
 lemma design_refine_thms:
   assumes "P \<sqsubseteq> Q"
   shows "`pre\<^sub>D(P) \<longrightarrow> pre\<^sub>D(Q)`" "`pre\<^sub>D(P) \<and> post\<^sub>D(Q) \<longrightarrow> post\<^sub>D(P)`"
-  using assms unfolding pred_refine_iff by (pred_auto, blast, pred_auto)
+  using assms unfolding pred_refine_iff by (pred_auto, blast, pred_auto, blast)
 
 end
