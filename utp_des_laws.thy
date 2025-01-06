@@ -30,24 +30,12 @@ lemma lift_des_skip_dr_unit [simp]:
 lemma lift_des_skip_dr_unit_unrest: "$ok\<^sup>> \<sharp> P \<Longrightarrow> (P ;; II \<up> more\<^sub>L\<^sup>2) = P"
   by (pred_auto)
 
-(*
-lemma state_subst_design [usubst]:
-  "\<lceil>\<sigma> \<oplus>\<^sub>s \<Sigma>\<^sub>D\<rceil>\<^sub>s \<dagger> (P \<turnstile>\<^sub>r Q) = (\<lceil>\<sigma>\<rceil>\<^sub>s \<dagger> P) \<turnstile>\<^sub>r (\<lceil>\<sigma>\<rceil>\<^sub>s \<dagger> Q)"
-  by (rel_auto)
-*)
-
 lemma get_unrest_subst [usubst_eval]: "\<lbrakk> vwb_lens x; $x \<sharp>\<^sub>s \<sigma> \<rbrakk> \<Longrightarrow> get\<^bsub>x\<^esub> (\<sigma> s) = get\<^bsub>x\<^esub> s"
   by (expr_simp, metis vwb_lens_wb wb_lens.get_put wb_lens_weak weak_lens.view_determination)
 
 lemma design_subst [usubst]:
   "\<lbrakk> $ok\<^sup>< \<sharp>\<^sub>s \<sigma>; $ok\<^sup>> \<sharp>\<^sub>s \<sigma> \<rbrakk> \<Longrightarrow> \<sigma> \<dagger> (P \<turnstile> Q) = (\<sigma> \<dagger> P) \<turnstile> (\<sigma> \<dagger> Q)"
   by (simp add: pred, subst_eval, simp add: subst_app_def)
-
-(*
-lemma design_msubst [usubst]:
-  "(P(x) \<turnstile> Q(x))\<lbrakk>x\<rightarrow>v\<rbrakk> = (P(x)\<lbrakk>x\<rightarrow>v\<rbrakk> \<turnstile> Q(x)\<lbrakk>x\<rightarrow>v\<rbrakk>)"
-  by (rel_auto)
-*)
     
 lemma design_ok_false [usubst]: "(P \<turnstile> Q)\<lbrakk>False/ok\<^sup><\<rbrakk> = true"
   by pred_auto
@@ -138,7 +126,7 @@ theorem rdesign_composition_cond:
   shows "((p1 \<turnstile>\<^sub>r Q1) ;; (P2 \<turnstile>\<^sub>r Q2)) = ((p1 \<and> \<not> (Q1 ;; (\<not> P2))) \<turnstile>\<^sub>r (Q1 ;; Q2))"
   using assms by pred_auto
 
-theorem design_composition_wp:
+theorem design_composition_wlp:
   fixes p1 p2 :: "'a des_vars_scheme \<Rightarrow> bool"
   assumes
     "$ok \<sharp> p1" "$ok \<sharp> p2"
@@ -146,7 +134,7 @@ theorem design_composition_wp:
   shows "((p1\<^sup>< \<turnstile> Q1) ;; (p2\<^sup>< \<turnstile> Q2)) = ((p1 \<and> Q1 wlp p2)\<^sup>< \<turnstile> (Q1 ;; Q2))"
   unfolding design_def by (pred_auto assms: assms, metis+)
 
-theorem rdesign_composition_wp:
+theorem rdesign_composition_wlp:
   "((p1\<^sup>< \<turnstile>\<^sub>r Q1) ;; (p2\<^sup>< \<turnstile>\<^sub>r Q2)) = ((p1 \<and> Q1 wlp p2)\<^sup>< \<turnstile>\<^sub>r (Q1 ;; Q2))"
   by (pred_auto)
 
@@ -248,7 +236,6 @@ next
       by (metis upred_semiring.power_Suc)
   qed
 qed
-
 
 subsection \<open> Preconditions and Postconditions \<close>
 
@@ -375,7 +362,7 @@ theorem design_refinement:
   assumes
     "$ok\<^sup>< \<sharp> P1" "$ok\<^sup>> \<sharp> P1" "$ok\<^sup>< \<sharp> P2" "$ok\<^sup>> \<sharp> P2"
     "$ok\<^sup>< \<sharp> Q1" "$ok\<^sup>> \<sharp> Q1" "$ok\<^sup>< \<sharp> Q2" "$ok\<^sup>> \<sharp> Q2"
-  shows "((P1 \<turnstile> Q1) \<sqsubseteq> (P2 \<turnstile> Q2)) \<longleftrightarrow> `(P1 \<longrightarrow> P2) \<and> (P1 \<and> Q2 \<longrightarrow> Q1)`"
+  shows "(P1 \<turnstile> Q1 \<sqsubseteq> P2 \<turnstile> Q2) \<longleftrightarrow> `(P1 \<longrightarrow> P2) \<and> (P1 \<and> Q2 \<longrightarrow> Q1)`"
   by (pred_auto assms: assms; metis)
 
 theorem rdesign_refinement:
@@ -402,11 +389,9 @@ lemma rdesign_refine_intro':
   shows "P1 \<turnstile>\<^sub>r Q1 \<sqsubseteq> P2 \<turnstile>\<^sub>r Q2"
   using assms by (pred_auto)
 
-
 lemma ndesign_refinement: 
   "p1 \<turnstile>\<^sub>n Q1 \<sqsubseteq> p2 \<turnstile>\<^sub>n Q2 \<longleftrightarrow> (`p1 \<longrightarrow> p2` \<and> `p1\<^sup>< \<and> Q2 \<longrightarrow> Q1`)"
   by pred_auto
-
 
 lemma ndesign_refinement': 
   "p1 \<turnstile>\<^sub>n Q1 \<sqsubseteq> p2 \<turnstile>\<^sub>n Q2 \<longleftrightarrow> (`p1 \<longrightarrow> p2` \<and> Q1 \<sqsubseteq> \<questiondown>p1? ;; Q2)"

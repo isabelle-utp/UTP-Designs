@@ -180,11 +180,6 @@ proof -
     by (metis H1_USUP image_image)
 qed
 
-(*
-lemma msubst_H1: "(\<And>x. P x is H1) \<Longrightarrow> P x\<lbrakk>x\<rightarrow>v\<rbrakk> is H1"
-  by (rel_auto)
-*)
-
 subsection \<open> H2: A specification cannot require non-termination \<close>
 
 definition J :: "'\<alpha> des_hrel" where 
@@ -238,25 +233,6 @@ theorem H2_equivalence:
   "P is H2 \<longleftrightarrow> `(P\<^sup>f \<longrightarrow> P\<^sup>t)`"
   by (pred_auto, (metis (full_types))+)
 
-(*
-proof -
-  have "(P = (P ;; J)) \<longleftrightarrow> (P = (P\<^sup>f \<or> (P\<^sup>t \<and> ok\<^sup>>)))"
-    by (simp add: J_split)
-  also have "... \<longleftrightarrow> `\<lbrakk>(P \<longleftrightarrow> P\<^sup>f \<or> P\<^sup>t \<and> (ok\<^sup>>)\<^sub>e)\<^sup>f \<and> (P \<longleftrightarrow> P\<^sup>f \<or> P\<^sup>t \<and> (ok\<^sup>>)\<^sub>e)\<rbrakk>\<^sub>P`"
-    by rel_auto
-  also have "... = `\<lbrakk>(P\<^sup>f \<longleftrightarrow> P\<^sup>f) \<and> (P\<^sup>t \<longleftrightarrow> P\<^sup>f \<or> P\<^sup>t)\<rbrakk>\<^sub>P`"
-    apply pred_auto
-    by metis+
-  also have "... = `\<lbrakk>P\<^sup>t \<longleftrightarrow> (P\<^sup>f \<or> P\<^sup>t)\<rbrakk>\<^sub>P`"
-    by (pred_auto)
-  also have "... = `P\<^sup>f \<longrightarrow> P\<^sup>t`"
-    by (pred_auto)
-  finally show ?thesis
-    using H2_def Healthy_def'
-    by (metis (no_types, lifting) SEXP_def conj_refine_left iff_pred_def pred_ba.boolean_algebra.conj_one_right pred_ba.inf_le2 pred_ba.sup.absorb2 pred_ba.sup.orderE pred_impl_laws(5) pred_set rel_eq_iff taut_def true_false_pred_expr(1))
-qed
-*)
-
 lemma H2_equiv:
   "P is H2 \<longleftrightarrow> P\<^sup>t \<sqsubseteq> P\<^sup>f"
   by (simp add: H2_equivalence pred_refine_iff, expr_simp)
@@ -279,10 +255,8 @@ theorem H2_idem:
   "H2(H2(P)) = H2(P)"
   by (metis H2_def J_idem seqr_assoc)
 
-(*
 theorem H2_Continuous: "Continuous H2"
-  by (rel_auto)
-*)
+  by pred_auto
 
 theorem H2_not_okay: "H2 (\<not>ok\<^sup><) = (\<not>ok\<^sup><)"
 proof -
@@ -338,7 +312,6 @@ qed
 
 subsection \<open> Designs as $H1$-$H2$ predicates \<close>
 
-
 abbreviation H1_H2 :: "('\<alpha>, '\<beta>) des_rel \<Rightarrow> ('\<alpha>, '\<beta>) des_rel" ("\<^bold>H") where
 "H1_H2 P \<equiv> H1 (H2 P)"
 
@@ -363,15 +336,6 @@ theorem H1_H2_is_design:
   assumes "P is H1" "P is H2"
   shows "P = (\<not> P\<^sup>f) \<turnstile> P\<^sup>t"
   using assms by (metis H1_H2_eq_design Healthy_def)
-
-(*
-lemma aext_arestr' [alpha]:
-  fixes P :: "'a \<leftrightarrow> 'b"
-  assumes "$a \<sharp> P"
-  shows "(P \<down> a) \<up> a = P"
-  apply rel_auto  
-  by (rel_simp, metis assms lens_override_def)
-*)
 
 theorem H1_H2_eq_rdesign:
   "\<^bold>H(P) = pre\<^sub>D(P) \<turnstile>\<^sub>r post\<^sub>D(P)"
@@ -406,7 +370,8 @@ lemma H1_H2_refinement:
   shows "P \<sqsubseteq> Q \<longleftrightarrow> (`pre\<^sub>D(P) \<longrightarrow> pre\<^sub>D(Q)` \<and> `pre\<^sub>D(P) \<and> post\<^sub>D(Q) \<longrightarrow> post\<^sub>D(P)`)"
   using assms
   apply (simp only:rdesign_refinement[symmetric])
-  by (metis H1_H2_eq_rdesign Healthy_if)
+  apply (metis H1_H2_eq_rdesign Healthy_if)
+  done
 
 lemma H1_H2_refines:
   assumes "P is \<^bold>H" "Q is \<^bold>H" "P \<sqsubseteq> Q"
@@ -421,13 +386,11 @@ lemma H1_H2_idempotent: "\<^bold>H (\<^bold>H P) = \<^bold>H P"
 lemma H1_H2_Idempotent [closure]: "Idempotent \<^bold>H"
   by (simp add: Idempotent_def H1_H2_idempotent)
 
-(*
-lemma H1_H2_monotonic [closure]: "Monotone \<^bold>H"
-  by (simp add: H1_monotone H2_def mono_def seqr_mono)
+lemma H1_H2_monotonic [closure]: "Monotonic \<^bold>H"
+  by (simp add: Continuous_Monotonic H1_Continuous H1_H2_comp H2_Continuous Monotonic_comp)
 
 lemma H1_H2_Continuous [closure]: "Continuous \<^bold>H"
   by (simp add: Continuous_comp H1_Continuous H1_H2_comp H2_Continuous)
-*)
 
 lemma H1_H2_false: "\<^bold>H false = \<top>\<^sub>D"
   by (pred_auto)
@@ -464,8 +427,6 @@ qed
 
 lemma H1_H2_left_unit: "P is \<^bold>H \<Longrightarrow> II\<^sub>D ;; P = P"
   by (metis H1_H2_eq_rdesign Healthy_def' rdesign_left_unit)
-
-thm design_is_H1_H2
 
 lemma UINF_H1_H2_closed [closure]:
   assumes "A \<noteq> {}" "\<forall> P \<in> A. P is \<^bold>H"
@@ -689,11 +650,6 @@ theorem H3_ndesign: "H3(p \<turnstile>\<^sub>n Q) = (p \<turnstile>\<^sub>n Q)"
 theorem ndesign_is_H3 [closure]: "p \<turnstile>\<^sub>n Q is H3"
   by (simp add: H3_ndesign Healthy_def)
 
-(*
-lemma msubst_pre_H3: "(\<And>x. P x is H3) \<Longrightarrow> P x\<lbrakk>x\<rightarrow>\<lceil>v\<rceil>\<^sub><\<rbrakk> is H3"
-  by (rel_auto)
-*)
-
 subsection \<open> Normal Designs as $H1$-$H3$ predicates \<close>
 
 text \<open> A normal design~\cite{Guttman2010} refers only to initial state variables in the precondition. \<close>
@@ -730,10 +686,6 @@ lemma H1_H3_monotonic [closure]: "Monotonic \<^bold>N"
 
 lemma H1_H3_Continuous [closure]: "Continuous \<^bold>N"
   by (simp add: Continuous_comp H1_Continuous H1_H3_comp H3_Continuous)
-
-interpretation normal_design_thy: utp_theory_continuous "\<^bold>N"
-  rewrites "le (utp_order \<^bold>N) = (\<sqsubseteq>)" and "carrier normal_design_thy.thy_order = \<lbrakk>\<^bold>N\<rbrakk>\<^sub>H"
-  by (unfold_locales, simp_all add: closure)
 
 lemma H1_H3_false: "\<^bold>N false = \<top>\<^sub>D"
   by (pred_auto)
@@ -859,11 +811,6 @@ qed
 lemma USUP_mem_H1_H3_closed [closure]:
   "\<lbrakk> \<And> i. i \<in> I \<Longrightarrow> P i is \<^bold>N \<rbrakk> \<Longrightarrow> (\<Squnion> i\<in>I. P i) is \<^bold>N"
   by (rule H1_H3_intro; simp add: H1_H3_impl_H2 USUP_mem_H1_H2_closed H3_unrest_out_alpha preD_USUP_mem unrest_INF_SUP(2))
-
-(*
-lemma msubst_pre_H1_H3 [closure]: "(\<And>x. P x is \<^bold>N) \<Longrightarrow> P x\<lbrakk>x\<rightarrow>\<lceil>v\<rceil>\<^sub><\<rbrakk> is \<^bold>N"
-  by (metis H1_H3_right_unit H3_def Healthy_if Healthy_intro msubst_H1 msubst_pre_H3)
-*)
 
 subsection \<open> H4: Feasibility \<close>
 

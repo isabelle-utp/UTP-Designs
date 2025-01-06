@@ -1,3 +1,5 @@
+section \<open> Design Signature and Core Laws \<close>
+
 theory utp_des_core
   imports UTP2.utp_wlp UTP2.utp_theory
 begin 
@@ -7,7 +9,6 @@ alphabet des_vars =
 
 type_synonym ('s\<^sub>1, 's\<^sub>2) des_rel = "('s\<^sub>1 des_vars_scheme, 's\<^sub>2 des_vars_scheme) urel"
 type_synonym ('s\<^sub>1) des_hrel = "('s\<^sub>1, 's\<^sub>1) des_rel"
-
 
 notation des_vars.more\<^sub>L ("\<^bold>v\<^sub>D")
 
@@ -113,5 +114,9 @@ syntax
 translations
   "P\<^sup>f" \<rightharpoonup> "_subst P (CONST False) (_svid_post (CONST ok))"
   "P\<^sup>t" \<rightharpoonup> "_subst P (CONST True) (_svid_post (CONST ok))"
+
+lemma state_subst_design [usubst]:
+  "(\<sigma> \<up>\<^sub>s \<^bold>v\<^sub>D\<^sup><) \<dagger> (P \<turnstile>\<^sub>r Q) = ((\<sigma> \<up>\<^sub>s \<^bold>v\<^sup><) \<dagger> P) \<turnstile>\<^sub>r ((\<sigma> \<up>\<^sub>s \<^bold>v\<^sup><) \<dagger> Q)"
+  by (pred_auto)
 
 end
