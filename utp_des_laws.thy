@@ -227,7 +227,7 @@ next
       have "(p \<and> Q wlp (\<forall>i\<in>{0..\<guillemotleft>n\<guillemotright>}. Q \<^bold>^ i wlp p))\<^sub>e = (p \<and> (\<forall>i\<in>{0..\<guillemotleft>n\<guillemotright>}. Q \<^bold>^ Suc i wlp p))\<^sub>e"
         by (simp add: upred_semiring.power_Suc wp, pred_auto)
       also have "... = (p \<and> (\<forall>i\<in>{1..\<guillemotleft>Suc n\<guillemotright>}. Q \<^bold>^ i wlp p))\<^sub>e"
-        by (pred_auto, metis Suc_le_D Suc_le_mono atLeastAtMost_iff least_zero)
+        by (pred_auto, metis Suc_leI atLeastAtMost_iff gr0_conv_Suc not_less_eq not_less_eq_eq)
       also have "... = (\<forall>i\<in>{0..\<guillemotleft>Suc n\<guillemotright>}. Q \<^bold>^ i wlp p)\<^sub>e"
         by (pred_simp, simp add: atLeast0_atMost_Suc_eq_insert_0 power.power_eq_if)
       finally show ?thesis by simp

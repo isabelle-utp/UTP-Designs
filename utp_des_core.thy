@@ -1,14 +1,14 @@
 section \<open> Design Signature and Core Laws \<close>
 
 theory utp_des_core
-  imports UTP2.utp_wlp UTP2.utp_theory
+  imports UTP2.utp
 begin 
 
 alphabet des_vars = 
   ok :: bool
 
 type_synonym ('s\<^sub>1, 's\<^sub>2) des_rel = "('s\<^sub>1 des_vars_scheme, 's\<^sub>2 des_vars_scheme) urel"
-type_synonym ('s\<^sub>1) des_hrel = "('s\<^sub>1, 's\<^sub>1) des_rel"
+type_synonym 's des_hrel = "('s, 's) des_rel"
 
 notation des_vars.more\<^sub>L ("\<^bold>v\<^sub>D")
 
