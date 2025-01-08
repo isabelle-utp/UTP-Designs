@@ -27,8 +27,7 @@ proof -
     by (metis assms(2) ndesign_form)
   from assms(3-4) show ?thesis
     apply (simp add: C D)
-    apply (ndes_simp)
-    apply (simp add: ndesign_refinement)
+    apply (simp add: ndes_simp ndesign_refinement)
     apply (pred_auto)
     apply blast
     done

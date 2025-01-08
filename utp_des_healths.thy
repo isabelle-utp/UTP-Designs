@@ -452,7 +452,7 @@ qed
 definition design_inf :: "('\<alpha>, '\<beta>) des_rel set \<Rightarrow> ('\<alpha>, '\<beta>) des_rel" ("\<Sqinter>\<^sub>D_" [900] 900) where
 "\<Sqinter>\<^sub>D A = (if (A = {}) then \<top>\<^sub>D else \<Sqinter> A)"
 
-abbreviation design_sup :: "('\<alpha>, '\<beta>) des_rel set \<Rightarrow> ('\<alpha>, '\<beta>) des_rel" ("\<Squnion>\<^sub>D_" [900] 900) where
+abbreviation (input) design_sup :: "('\<alpha>, '\<beta>) des_rel set \<Rightarrow> ('\<alpha>, '\<beta>) des_rel" ("\<Squnion>\<^sub>D_" [900] 900) where
 "\<Squnion>\<^sub>D A \<equiv> \<Squnion> A"
 
 lemma design_inf_H1_H2_closed:
