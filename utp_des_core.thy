@@ -44,7 +44,7 @@ syntax "_dcond" :: "logic \<Rightarrow> logic \<Rightarrow> logic \<Rightarrow> 
 translations "_dcond P b Q" == "CONST dcond P (b)\<^sub>e Q"
 
 definition design where
-[pred]: "design P Q = ((ok\<^sup>< \<and> P) \<longrightarrow> (ok\<^sup>> \<and> Q))\<^sub>e"
+[pred]: "design P Q = ((ok\<^sup>< \<and> P) \<longrightarrow> (ok\<^sup>> \<and> Q))"
 
 definition rdesign :: "('s\<^sub>1, 's\<^sub>2) urel \<Rightarrow> ('s\<^sub>1, 's\<^sub>2) urel \<Rightarrow> ('s\<^sub>1, 's\<^sub>2) des_rel" where
 [pred]: "rdesign P Q = design (P \<up> more\<^sub>L\<^sup>2) (Q \<up> more\<^sub>L\<^sup>2)"
@@ -95,7 +95,7 @@ expr_constructor top_d
 lemma top_d_not_ok:
   "\<top>\<^sub>D = (\<not> ok\<^sup><)\<^sub>e"
   unfolding top_d_def design_def 
-  by (expr_simp, simp add: false_pred_def true_pred_def)
+  by (pred_simp)
 
 definition pre_design :: "('\<alpha>, '\<beta>) des_rel \<Rightarrow> ('\<alpha>, '\<beta>) urel" ("pre\<^sub>D") where
   [pred]: "pre\<^sub>D(P) =  (\<not>P\<lbrakk>True,False/ok\<^sup><,ok\<^sup>>\<rbrakk>) \<down> more\<^sub>L\<^sup>2"

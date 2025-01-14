@@ -350,7 +350,7 @@ proof -
     by (pred_auto)
   also have "... = ((ok\<^sup>< \<and> (pre\<^sub>D(P) \<up> more\<^sub>L\<^sup>2)) \<longrightarrow> ok\<^sup>> \<and> ok\<^sup>< \<and> (post\<^sub>D(P) \<up> more\<^sub>L\<^sup>2))"
     by (simp add: ok_post ok_pre )
-  also have "... = (ok\<^sup>< \<and> (pre\<^sub>D(P) \<up> more\<^sub>L\<^sup>2) \<longrightarrow> ok\<^sup>> \<and> (post\<^sub>D(P)\<up> more\<^sub>L\<^sup>2))\<^sub>e"
+  also have "... = (ok\<^sup>< \<and> (pre\<^sub>D(P) \<up> more\<^sub>L\<^sup>2) \<longrightarrow> ok\<^sup>> \<and> (post\<^sub>D(P)\<up> more\<^sub>L\<^sup>2))"
     by (pred_auto)
   also have "... = pre\<^sub>D(P) \<turnstile>\<^sub>r post\<^sub>D(P)"
     by (simp add: rdesign_def design_def)
