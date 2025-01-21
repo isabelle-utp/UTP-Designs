@@ -90,12 +90,12 @@ lemma GrdCommD_false [simp]: "false \<rightarrow>\<^sub>D P = \<top>\<^sub>D"
 lemma GrdCommD_abort [simp]: "b \<rightarrow>\<^sub>D true = ((\<not> b) \<turnstile>\<^sub>n false)"
   by (pred_auto)
 
-(*
 subsection \<open> Frames and Extensions \<close>
   
 definition des_frame :: "('\<alpha> \<Longrightarrow> '\<beta>) \<Rightarrow> '\<beta> des_hrel \<Rightarrow> '\<beta> des_hrel" where
-[pred]: "des_frame x P = frame (ok +\<^sub>L x ;\<^sub>L \<Sigma>\<^sub>D) P"
+[pred]: "des_frame x P = $(ok,\<^bold>v\<^sub>D:x):[P]"
 
+(*
 definition des_frame_ext :: "('\<alpha> \<Longrightarrow> '\<beta>) \<Rightarrow> '\<alpha> des_hrel \<Rightarrow> '\<beta> des_hrel" where
 [pred]: "des_frame_ext a P = des_frame a (rel_aext P (lmap\<^sub>D a))"
 
@@ -112,6 +112,7 @@ translations
 lemma lmapD_rel_aext_ndes [ndes_simp]:
   "(p \<turnstile>\<^sub>n Q) \<oplus>\<^sub>r lmap\<^sub>D[a] = (p \<oplus>\<^sub>p a \<turnstile>\<^sub>n Q \<oplus>\<^sub>r a)"
   by (pred_auto)
+*)
 
 subsection \<open> Alternation \<close>
   
@@ -119,9 +120,9 @@ consts
   ualtern       :: "'a set \<Rightarrow> ('a \<Rightarrow> 'p) \<Rightarrow> ('a \<Rightarrow> 'r) \<Rightarrow> 'r \<Rightarrow> 'r"
   ualtern_list  :: "('a \<times> 'r) list \<Rightarrow> 'r \<Rightarrow> 'r"
   
-definition AlternateD :: "'a set \<Rightarrow> ('a \<Rightarrow> '\<alpha> upred) \<Rightarrow> ('a \<Rightarrow> ('\<alpha>, '\<beta>) des_rel) \<Rightarrow> ('\<alpha>, '\<beta>) des_rel \<Rightarrow> ('\<alpha>, '\<beta>) des_rel" where
+definition AlternateD :: "'a set \<Rightarrow> ('a \<Rightarrow> '\<alpha> pred) \<Rightarrow> ('a \<Rightarrow> ('\<alpha>, '\<beta>) des_rel) \<Rightarrow> ('\<alpha>, '\<beta>) des_rel \<Rightarrow> ('\<alpha>, '\<beta>) des_rel" where
 [pred, ndes_simp]:
-"AlternateD A g P Q = (\<Sqinter> i\<in>A \<bullet> g(i) \<rightarrow>\<^sub>D P(i)) \<sqinter> ((\<And> i\<in>A \<bullet> \<not> g(i)) \<rightarrow>\<^sub>D Q)"
+"AlternateD A g P Q = (\<Sqinter> i\<in>A. g(i) \<rightarrow>\<^sub>D P(i)) \<sqinter> ((\<forall> i\<in>\<guillemotleft>A\<guillemotright>. \<not> @(g(i)))\<^sub>e \<rightarrow>\<^sub>D Q)"
 
 text \<open> This lemma shows that our generalised alternation is the same operator as Marcel Oliveira's
   definition of alternation when the else branch is abort. \<close>
@@ -129,14 +130,13 @@ text \<open> This lemma shows that our generalised alternation is the same opera
 lemma AlternateD_abort_alternate:
   assumes "\<And> i. P(i) is \<^bold>N"
   shows
-  "AlternateD A g P \<bottom>\<^sub>D = 
-  ((\<Or> i\<in>A \<bullet> g(i)) \<and> (\<And> i\<in>A \<bullet> g(i) \<Rightarrow> \<lfloor>pre\<^sub>D(P i)\<rfloor>\<^sub><)) \<turnstile>\<^sub>n (\<Or> i\<in>A \<bullet> \<lceil>g(i)\<rceil>\<^sub>< \<and> post\<^sub>D(P i))"
+  "AlternateD A g P \<bottom>\<^sub>D = ((\<exists> i\<in>\<guillemotleft>A\<guillemotright>. @(g(i))) \<and> (\<forall> i\<in>\<guillemotleft>A\<guillemotright>. @(g(i)) \<longrightarrow> (pre\<^sub>D(P i))\<^sub><)) \<turnstile>\<^sub>n (\<Sqinter> i\<in>A. (@(g(i)))\<^sup>< \<and> post\<^sub>D(P i))"
 proof (cases "A = {}")
   case False
   have "AlternateD A g P \<bottom>\<^sub>D = 
-        (\<Sqinter> i\<in>A \<bullet> g(i) \<rightarrow>\<^sub>D (\<lfloor>pre\<^sub>D(P i)\<rfloor>\<^sub>< \<turnstile>\<^sub>n post\<^sub>D(P i))) \<sqinter> ((\<And> i\<in>A \<bullet> \<not> g(i)) \<rightarrow>\<^sub>D (false \<turnstile>\<^sub>n true))"
+        (\<Sqinter> i\<in>A. g(i) \<rightarrow>\<^sub>D ((pre\<^sub>D(P i))\<^sub>< \<turnstile>\<^sub>n post\<^sub>D(P i))) \<sqinter> ((\<forall> i\<in>\<guillemotleft>A\<guillemotright>. \<not> @(g(i)))\<^sub>e \<rightarrow>\<^sub>D (False \<turnstile>\<^sub>n true))"
     by (simp add: AlternateD_def ndesign_form bot_d_ndes_def assms)
-  also have "... = ((\<Or> i\<in>A \<bullet> g(i)) \<and> (\<And> i\<in>A \<bullet> g(i) \<Rightarrow> \<lfloor>pre\<^sub>D(P i)\<rfloor>\<^sub><)) \<turnstile>\<^sub>n (\<Or> i\<in>A \<bullet> \<lceil>g(i)\<rceil>\<^sub>< \<and> post\<^sub>D(P i))"
+  also have "... = ((\<exists> i\<in>\<guillemotleft>A\<guillemotright>. @(g(i))) \<and> (\<forall> i\<in>\<guillemotleft>A\<guillemotright>. @(g(i)) \<longrightarrow> (pre\<^sub>D(P i))\<^sub><)) \<turnstile>\<^sub>n (\<Sqinter> i\<in>A. (@(g(i)))\<^sup>< \<and> post\<^sub>D(P i))"
     by (simp add: ndes_simp False, pred_auto)
   finally show ?thesis by simp
 next
@@ -145,7 +145,7 @@ next
     by (simp add: AlternateD_def, pred_auto)
 qed
      
-definition AlternateD_list :: "('\<alpha> upred \<times> ('\<alpha>, '\<beta>) des_rel) list \<Rightarrow> ('\<alpha>, '\<beta>) des_rel  \<Rightarrow> ('\<alpha>, '\<beta>) des_rel" where 
+definition AlternateD_list :: "('\<alpha> pred \<times> ('\<alpha>, '\<beta>) des_rel) list \<Rightarrow> ('\<alpha>, '\<beta>) des_rel  \<Rightarrow> ('\<alpha>, '\<beta>) des_rel" where 
 [pred, ndes_simp]:
 "AlternateD_list xs P = 
   AlternateD {0..<length xs} (\<lambda> i. map fst xs ! i) (\<lambda> i. map snd xs ! i) P"
@@ -189,26 +189,27 @@ lemma AlternateD_H1_H3_closed [closure]:
 proof (cases "A = {}")
   case True
   then show ?thesis
-    by (simp add: AlternateD_def closure false_upred_def assms)
+    by (simp add: AlternateD_def closure false_pred_def assms)
 next
   case False
   then show ?thesis
     by (simp add: AlternateD_def closure assms)
 qed
-    
+
 lemma AltD_ndes_simp [ndes_simp]: 
-  "if i\<in>A \<bullet> g(i) \<rightarrow> (P\<^sub>1(i) \<turnstile>\<^sub>n P\<^sub>2(i)) else Q\<^sub>1 \<turnstile>\<^sub>n Q\<^sub>2 fi 
-   = ((\<And> i \<in> A \<bullet> g i \<Rightarrow> P\<^sub>1 i) \<and> ((\<And> i \<in> A \<bullet> \<not> g i) \<Rightarrow> Q\<^sub>1)) \<turnstile>\<^sub>n
-     ((\<Or> i \<in> A \<bullet> \<lceil>g i\<rceil>\<^sub>< \<and> P\<^sub>2 i) \<or> (\<And> i \<in> A \<bullet> \<not> \<lceil>g i\<rceil>\<^sub><) \<and> Q\<^sub>2)"
+  "if i\<in>A \<bullet> g(i) \<rightarrow> (@(P\<^sub>1(i)) \<turnstile>\<^sub>n P\<^sub>2(i)) else Q\<^sub>1 \<turnstile>\<^sub>n Q\<^sub>2 fi 
+   = ((\<forall> i \<in> \<guillemotleft>A\<guillemotright>. @(g i) \<longrightarrow> @(P\<^sub>1 i)) \<and> ((\<forall> i \<in> \<guillemotleft>A\<guillemotright>. \<not> @(g i)) \<longrightarrow> Q\<^sub>1)) \<turnstile>\<^sub>n
+     ((\<Sqinter> i \<in> A. (@(g i))\<^sup>< \<and> (P\<^sub>2 i)) \<or> (\<forall> i \<in> \<guillemotleft>A\<guillemotright>. \<not> @(g i)\<^sup><)\<^sub>e \<and> Q\<^sub>2)"
 proof (cases "A = {}")
   case True
-  then show ?thesis by (simp add: AlternateD_def)
+  then show ?thesis by (simp add: AlternateD_def, pred_simp)
 next
   case False
   then show ?thesis
     by (simp add: ndes_simp, pred_auto)
 qed
 
+(*
 declare UINF_upto_expand_first [ndes_simp]
 declare UINF_Suc_shift [ndes_simp]
 declare USUP_upto_expand_first [ndes_simp]
@@ -222,12 +223,13 @@ lemma AlternateD_mono_refine:
   
 lemma Monotonic_AlternateD [closure]:
   "\<lbrakk> \<And> i. Monotonic (F i); Monotonic G \<rbrakk> \<Longrightarrow> Monotonic (\<lambda> X. if i\<in>A \<bullet> g(i) \<rightarrow> F i X else G(X) fi)" 
+  
   by (pred_auto, meson)
 
 lemma AlternateD_eq:
   assumes "A = B" "\<And> i. i\<in>A \<Longrightarrow> g(i) = h(i)" "\<And> i. i\<in>A \<Longrightarrow> P(i) = Q(i)" "R = S"
   shows "if i\<in>A \<bullet> g(i) \<rightarrow> P(i) else R fi = if i\<in>B \<bullet> h(i) \<rightarrow> Q(i) else S fi"
-  by (insert assms, rel_blast)
+  by (insert assms, pred_simp)
 
 lemma AlternateD_empty:
   "if i\<in>{} \<bullet> g(i) \<rightarrow> P(i) else Q fi = Q"
@@ -474,7 +476,7 @@ lemma IterateD_single_refine_intro:
 
 subsection \<open> Let and Local Variables \<close>
   
-definition LetD :: "('a, '\<alpha>) uexpr \<Rightarrow> ('a \<Rightarrow> '\<alpha> des_hrel) \<Rightarrow> '\<alpha> des_hrel" where
+definition LetD :: "('a, '\<alpha>) expr \<Rightarrow> ('a \<Rightarrow> '\<alpha> des_hrel) \<Rightarrow> '\<alpha> des_hrel" where
 [pred]: "LetD v P = (P x)\<lbrakk>x \<rightarrow> \<lceil>v\<rceil>\<^sub>D\<^sub><\<rbrakk>"
 
 syntax
