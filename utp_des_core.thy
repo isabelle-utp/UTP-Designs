@@ -4,6 +4,11 @@ theory utp_des_core
   imports UTP2.utp
 begin 
 
+text \<open> UTP designs~\cite{Cavalcanti04,Hoare&98} are a subset of the alphabetised relations that
+  use a boolean observational variable $ok$ to record the start and termination of a program. For 
+  more information on designs please see Chapter 3 of the UTP book~\cite{Hoare&98}, or
+  the more accessible designs tutorial~\cite{Cavalcanti04}. \<close>
+
 alphabet des_vars = 
   ok :: bool
 
@@ -17,6 +22,23 @@ syntax
 
 translations
   "_svid_des_alpha" => "CONST des_vars.more\<^sub>L"
+
+text \<open> Define the lens functor for designs \<close>
+  
+definition lmap_des_vars :: "('\<alpha> \<Longrightarrow> '\<beta>) \<Rightarrow> ('\<alpha> des_vars_scheme \<Longrightarrow> '\<beta> des_vars_scheme)" ("lmap\<^sub>D")
+where [lens_defs]: "lmap_des_vars = lmap[des_vars]"
+
+syntax "_lmap_des_vars" :: "svid \<Rightarrow> svid" ("lmap\<^sub>D[_]")
+translations "_lmap_des_vars a" => "CONST lmap_des_vars a"
+
+lemma lmap_des_vars: "vwb_lens f \<Longrightarrow> vwb_lens (lmap_des_vars f)"
+  by (unfold_locales, auto simp add: lens_defs alpha_defs)
+
+lemma lmap_id: "lmap\<^sub>D 1\<^sub>L = 1\<^sub>L"
+  by (simp add: lens_defs alpha_defs fun_eq_iff)
+
+lemma lmap_comp: "lmap\<^sub>D (f ;\<^sub>L g) = lmap\<^sub>D f ;\<^sub>L lmap\<^sub>D g"
+  by (simp add: lens_defs alpha_defs fun_eq_iff)
 
 text \<open> The following notations define liftings from non-design predicates into design
   predicates using alphabet extensions. \<close>

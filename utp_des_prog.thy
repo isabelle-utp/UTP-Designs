@@ -95,24 +95,21 @@ subsection \<open> Frames and Extensions \<close>
 definition des_frame :: "('\<alpha> \<Longrightarrow> '\<beta>) \<Rightarrow> '\<beta> des_hrel \<Rightarrow> '\<beta> des_hrel" where
 [pred]: "des_frame x P = $(ok,\<^bold>v\<^sub>D:x):[P]"
 
-(*
 definition des_frame_ext :: "('\<alpha> \<Longrightarrow> '\<beta>) \<Rightarrow> '\<alpha> des_hrel \<Rightarrow> '\<beta> des_hrel" where
-[pred]: "des_frame_ext a P = des_frame a (rel_aext P (lmap\<^sub>D a))"
+[pred]: "des_frame_ext a P = des_frame a (P \<up>\<^sub>2 lmap\<^sub>D[a])"
 
 syntax
   "_des_frame"     :: "salpha \<Rightarrow> logic \<Rightarrow> logic" ("_:[_]\<^sub>D" [99,0] 100)
-  "_des_frame_ext" :: "salpha \<Rightarrow> logic \<Rightarrow> logic" ("_:[_]\<^sub>D\<^sup>+" [99,0] 100)
+  "_des_frame_ext" :: "svid \<Rightarrow> logic \<Rightarrow> logic" ("_:[_]\<^sub>D\<^sup>+" [99,0] 100)
 
 translations
   "_des_frame x P" => "CONST des_frame x P"
   "_des_frame (_salphaset (_salphamk x)) P" <= "CONST des_frame x P"
-  "_des_frame_ext x P" => "CONST des_frame_ext x P"
-  "_des_frame_ext (_salphaset (_salphamk x)) P" <= "CONST des_frame_ext x P"
+  "_des_frame_ext x P" == "CONST des_frame_ext x P"
 
 lemma lmapD_rel_aext_ndes [ndes_simp]:
-  "(p \<turnstile>\<^sub>n Q) \<oplus>\<^sub>r lmap\<^sub>D[a] = (p \<oplus>\<^sub>p a \<turnstile>\<^sub>n Q \<oplus>\<^sub>r a)"
+  "(p \<turnstile>\<^sub>n Q) \<up>\<^sub>2 lmap\<^sub>D[a] = (p \<up> a) \<turnstile>\<^sub>n (Q \<up>\<^sub>2 a)"
   by (pred_auto)
-*)
 
 subsection \<open> Alternation \<close>
   

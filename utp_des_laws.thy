@@ -1,6 +1,11 @@
+section \<open> Design Theorems and Laws \<close>
+
 theory utp_des_laws
   imports utp_des_core
 begin 
+
+text \<open> Two named theorem sets exist are created to group theorems that, respectively, provide
+  pre-postcondition definitions, and simplify operators to their normal design form. \<close>
 
 named_theorems ndes and ndes_simp
 
