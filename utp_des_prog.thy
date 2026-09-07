@@ -341,7 +341,7 @@ translations
   
 definition IterateD :: "'a set \<Rightarrow> ('a \<Rightarrow> '\<alpha> upred) \<Rightarrow> ('a \<Rightarrow> '\<alpha> des_hrel) \<Rightarrow> '\<alpha> des_hrel" where
 [pred, ndes_simp]:
-"IterateD A g P = (\<mu>\<^sub>N X \<bullet> if i\<in>A \<bullet> g(i) \<rightarrow> P(i) ;; X else II\<^sub>D fi)"
+"IterateD A g P = (\<mu>\<^sub>N X. if i\<in>A \<bullet> g(i) \<rightarrow> P(i) ;; X else II\<^sub>D fi)"
 
 definition IterateD_list :: "('\<alpha> upred \<times> '\<alpha> des_hrel) list \<Rightarrow> '\<alpha> des_hrel" where 
 [pred, ndes_simp]:
@@ -369,7 +369,7 @@ lemma IterateD_empty:
   by (simp add: IterateD_def AlternateD_empty ndes_theory.LFP_const skip_d_is_H1_H3)
 
 lemma IterateD_list_single_expand:
-  "do b \<rightarrow> P od = (\<^bold>\<mu>\<^bsub>NDES\<^esub> X \<bullet> if b \<rightarrow> P ;; X else II\<^sub>D fi)"
+  "do b \<rightarrow> P od = (\<^bold>\<mu>\<^bsub>NDES\<^esub> X. if b \<rightarrow> P ;; X else II\<^sub>D fi)"
 oops
     
 lemma IterateD_singleton:

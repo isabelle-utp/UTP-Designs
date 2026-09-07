@@ -40,6 +40,24 @@ lemma lmap_id: "lmap\<^sub>D 1\<^sub>L = 1\<^sub>L"
 lemma lmap_comp: "lmap\<^sub>D (f ;\<^sub>L g) = lmap\<^sub>D f ;\<^sub>L lmap\<^sub>D g"
   by (simp add: lens_defs alpha_defs fun_eq_iff)
 
+lemma des_vars_more_put [simp]:
+  "des_vars.more (put\<^bsub>\<^bold>v\<^sub>D\<^esub> d v) = v"
+  by (simp add: des_vars.more\<^sub>L_def)
+
+lemma des_vars_update_commute:
+  "x\<lparr>ok\<^sub>v := ok_val, des_vars.more := more_val\<rparr> =
+   x\<lparr>des_vars.more := more_val, ok\<^sub>v := ok_val\<rparr>"
+  by (cases x, simp)
+
+lemma des_more_ok_update_commute:
+  "des_vars.more_update f (ok\<^sub>v_update g r) =
+   ok\<^sub>v_update g (des_vars.more_update f r)"
+  by (cases r) simp
+
+lemma des_vars_collapse:
+  "r\<lparr>des_vars.more := m, ok\<^sub>v := b\<rparr> = \<lparr>ok\<^sub>v = b, \<dots> = m\<rparr>"
+  by (cases r) simp
+
 text \<open> The following notations define liftings from non-design predicates into design
   predicates using alphabet extensions. \<close>
 

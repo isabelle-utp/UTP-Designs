@@ -43,6 +43,12 @@ lemma H1_disj: "H1(P \<or> Q) = (H1(P) \<or> H1(Q))"
 lemma design_export_H1: "(P \<turnstile> Q) = (P \<turnstile> H1(Q))"
   by (pred_auto)
 
+lemma preD_H1: "pre\<^sub>D (H1 P) = pre\<^sub>D P"
+  by (simp add: H1_def pre_design_def, pred_simp)
+
+lemma postD_H1: "post\<^sub>D (H1 P) = post\<^sub>D P"
+  by (simp add: H1_def post_design_def, pred_simp)
+
 text \<open> The H1 algebraic laws are valid only when $\alpha(R)$ is homogeneous. This should maybe be
         generalised. \<close>
 
@@ -229,6 +235,13 @@ lemma H2_split:
   shows "H2(P) = (P\<^sup>f \<or> (P\<^sup>t \<and> ok\<^sup>>))"
   by (simp add: H2_def J_split)
 
+lemma preD_H2: "pre\<^sub>D (H2 P) = pre\<^sub>D P"
+  by (simp add: H2_split pre_design_def, pred_simp)
+
+lemma postD_H2:
+  "post\<^sub>D (H2 P) = ((\<not> pre\<^sub>D P) \<or> post\<^sub>D P)"
+  by (simp add: H2_split pre_design_def post_design_def, pred_simp)
+
 theorem H2_equivalence:
   "P is H2 \<longleftrightarrow> `(P\<^sup>f \<longrightarrow> P\<^sup>t)`"
   by (pred_auto, (metis (full_types))+)
@@ -382,6 +395,12 @@ lemma H1_H2_refines:
   
 lemma H1_H2_idempotent: "\<^bold>H (\<^bold>H P) = \<^bold>H P"
   by (simp add: H1_H2_commute H1_idem H2_idem)
+
+lemma H_implies_H1: "P is \<^bold>H \<Longrightarrow> P is H1"
+  by (simp only: Healthy_def, erule subst, simp only: H1_idem)
+
+lemma H_implies_H2: "P is \<^bold>H \<Longrightarrow> P is H2"
+  by (simp only: Healthy_def, erule subst, simp only: H1_H2_commute H2_idem)
 
 lemma H1_H2_Idempotent [closure]: "Idempotent \<^bold>H"
   by (simp add: Idempotent_def H1_H2_idempotent)
@@ -712,6 +731,9 @@ lemma H1_H3_bot_left: "P is \<^bold>N \<Longrightarrow> \<bottom>\<^sub>D ;; P =
 
 lemma H1_H3_impl_H2 [closure]: "P is \<^bold>N \<Longrightarrow> P is \<^bold>H"
   by (metis H1_H2_commute H1_idem H2_H3_absorb Healthy_def')
+
+lemma N_implies_H: "P is \<^bold>N \<Longrightarrow> P is \<^bold>H"
+  by (fact H1_H3_impl_H2)
 
 lemma H1_H3_eq_design_d_comp: "\<^bold>N(P) = ((\<not> P\<^sup>f) \<turnstile> P\<^sup>t) ;; II\<^sub>D"
   by (metis H1_H2_eq_design H1_H3_commute H3_H2_absorb H3_def)
