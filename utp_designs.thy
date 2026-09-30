@@ -5,6 +5,7 @@ theory utp_designs
     utp_des_core
     utp_des_laws
     utp_des_healths
+    utp_des_parallel
     utp_des_theory
     utp_des_tactics
     utp_des_hoare
